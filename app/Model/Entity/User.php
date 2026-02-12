@@ -8,16 +8,19 @@ class User{
 	public $id,
 	$nome,
 	$email,
+	$cargo,
+	$rec_senha,
 	$senha;
+
 
 	//RETORNA UM USUÁRIO COM BASE NO EMAIL
 	public static function getUserByEmail($email){
-		return (new Database('usuarios'))->select('email = "'.$email.'"')->fetchObject(self::class);
+		return (new Database('perfis_operadores'))->select('email = "'.$email.'"')->fetchObject(self::class);
 	}
 
 	//RETORNA UM USUÁRIO COM BASE NO CÓDIGO DE RECUPERAÇÃO DE SENHA
 	public static function getUserByCode($recCode){
-		return (new Database('usuarios'))->select('recCode = "'.$recCode.'"')->fetchObject(self::class);
+		return (new Database('perfis_operadores'))->select('recCode = "'.$recCode.'"')->fetchObject(self::class);
 	}	
 
 	//RETORNA UM DEPOIMENTO COM BASE NO ID
@@ -31,24 +34,13 @@ class User{
 	public function cadastrar(){
 		
 		//INSERIR OS DADOS PARA O BANCO DE DADOS
-		$obDatabase = new Database('usuarios');
+		$obDatabase = new Database('perfis_operadores');
 		$this->id = $obDatabase->insert([
 			'nome' => $this->nome,
 			'email' => $this->email,
-			'nivel' => $this->nivel,
 			'senha' => $this->senha,
-			'whatsapp' => $this->whatsapp,
-			'rg' => $this->rg,
-			'cpf' => $this->cpf,
-			'nascimento' => $this->nascimento,
-			'endereco' => $this->endereco,
-			'numero' => $this->numero,
-			'bairro' => $this->bairro,
-			'uf' => $this->uf,
-			'cidade' => $this->cidade,
-			'ativo' => $this->ativo,
-			'acesso' => $this->acesso,
-			'id_admin' => $this->id_admin
+			'cargo' => $this->cargo
+
 		]);
 		
 		return true;
@@ -57,49 +49,18 @@ class User{
 	//RETORNA DEPOIMENTOS
 	public static function getUser($where = null,$order = null,$limit = null,$fields = '*'){
 
-		return (new Database('usuarios'))->select($where,$order,$limit,$fields);
+		return (new Database('perfis_operadores'))->select($where,$order,$limit,$fields);
 	}
 
 	//ATUALIZA A MENSAGEM NO BANCO
 	public function atualizar(){
 
 		//ATUALIZA OS DADOS PARA O BANCO DE DADOS
-		return (new Database('usuarios'))->update('id = '.$this->id,[
+		return (new Database('perfis_operadores'))->update('id = '.$this->id,[
 			'nome' => $this->nome,
 			'email' => $this->email,
-			'nivel' => $this->nivel,
-			'whatsapp' => $this->whatsapp,
-			'rg' => $this->rg,
-			'cpf' => $this->cpf,
-			'nascimento' => $this->nascimento,
-			'endereco' => $this->endereco,
-			'numero' => $this->numero,
-			'bairro' => $this->bairro,
-			'uf' => $this->uf,
-			'cidade' => $this->cidade,
-			'ativo' => $this->ativo,
-			'acesso' => $this->acesso
-		]);
-
-	}
-
-
-	//ATUALIZA A MENSAGEM NO BANCO
-	public function atualizaPerfil(){
-
-		//ATUALIZA OS DADOS PARA O BANCO DE DADOS
-		return (new Database('usuarios'))->update('id = '.$this->id,[
-			'nome' => $this->nome,
-			'email' => $this->email,
-			'whatsapp' => $this->whatsapp,
-			'rg' => $this->rg,
-			'cpf' => $this->cpf,
-			'nascimento' => $this->nascimento,
-			'endereco' => $this->endereco,
-			'numero' => $this->numero,
-			'bairro' => $this->bairro,
-			'uf' => $this->uf,
-			'cidade' => $this->cidade
+			'senha' => $this->senha,
+			'cargo' => $this->cargo
 		]);
 
 	}
@@ -109,7 +70,7 @@ class User{
 	public function termoAceito(){
 
 		//ATUALIZA OS DADOS PARA O BANCO DE DADOS
-		return (new Database('usuarios'))->update('id = '.$this->id,[
+		return (new Database('perfis_operadores'))->update('id = '.$this->id,[
 			'termos_uso' => $this->termos_uso
 		]);
 
@@ -118,7 +79,7 @@ class User{
 	//EXCLUI DO BANCO DE DADOS
 	public function excluir(){
 
-		return (new Database('usuarios'))->delete('id = '.$this->id);
+		return (new Database('perfis_operadores'))->delete('id = '.$this->id);
 
 	}
 
@@ -127,7 +88,7 @@ class User{
 	public function resetSenha(){
 
 		//ATUALIZA OS DADOS PARA O BANCO DE DADOS
-		return (new Database('usuarios'))->update('id = '.$this->id,[
+		return (new Database('perfis_operadores'))->update('id = '.$this->id,[
 			'senha' => $this->senha
 		]);
 
@@ -137,7 +98,7 @@ class User{
 	public function setRecCode(){
 
 		//ATUALIZA OS DADOS PARA O BANCO DE DADOS
-		return (new Database('usuarios'))->update('id = '.$this->id,[
+		return (new Database('perfis_operadoress'))->update('id = '.$this->id,[
 			'recCode' => $this->code
 		]);
 

@@ -5,9 +5,6 @@ use \App\Http\Router;
 
 $obRouter = new Router(URL);
 
-//INCLUI AS ROTAS DO PAINEL
-include __DIR__.'/routes/site.php';
-
 //INCLUI AS ROTAS DE APIS
 include __DIR__.'/routes/api.php';
 

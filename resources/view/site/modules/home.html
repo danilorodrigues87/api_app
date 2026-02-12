@@ -1,62 +1,48 @@
-<!DOCTYPE html>
-<html lang="pt-br">
+<style>
+    /* Garante que a "onda" no rodapé do cabeçalho principal apareça */
+    .overlay-bottom {
+        position: relative;
+    }
+    .overlay-bottom::after {
+        content: "";
+        position: absolute;
+        width: 100%;
+        height: 80px; /* Ajuste conforme a altura da sua imagem de onda */
+        bottom: 0;
+        left: 0;
+        background: url('{{URL}}/resources/assets/img/overlay-bottom.png') bottom center no-repeat !important;
+        background-size: cover !important;
+        z-index: 1;
+    }
+</style>
 
-<head>
-    <meta charset="utf-8">
-    <title>{{title}}</title>
-    <meta content="width=device-width, initial-scale=1.0" name="viewport">
-    <meta content="Free HTML Templates" name="keywords">
-    <meta content="Free HTML Templates" name="description">
-
-     <!-- Favicon -->
-    <link href="{{URL}}/resources/asets/img/favicon.ico" rel="icon">
-
-    <!-- Google Web Fonts -->
-    <link rel="preconnect" href="https://fonts.gstatic.com">
-    <link href="https://fonts.googleapis.com/css2?family=Jost:wght@500;600;700&family=Open+Sans:wght@400;600&display=swap" rel="stylesheet"> 
-
-    <!-- Font Awesome -->
-    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.10.0/css/all.min.css" rel="stylesheet">
-
-    <!-- Libraries Stylesheet -->
-    <link href="{{URL}}/resources/lib/owlcarousel/assets/owl.carousel.min.css" rel="stylesheet">
-    <!-- Customized Bootstrap Stylesheet -->
-    <link href="{{URL}}/resources/css/style.css" rel="stylesheet">
-</head>
-
-
-{{top-menu}}
-
-   
-    <!-- Header Start -->
-    <div class="jumbotron jumbotron-fluid position-relative overlay-bottom" 
+<div class="jumbotron jumbotron-fluid position-relative overlay-bottom" 
      style="margin-bottom: 90px; 
             background: linear-gradient(rgba(40, 120, 235, 0.9), rgba(40, 120, 235, 0.9)), url('{{URL}}/resources/assets/img/header.jpg') no-repeat center center; 
             background-size: cover;">
 
-        
-        <div class="container text-center my-5 py-5">
-            <h1 class="text-white mt-4 mb-4">Learn From Home</h1>
-            <h1 class="text-white display-1 mb-5">Education Courses</h1>
-            <div class="mx-auto mb-5" style="width: 100%; max-width: 600px;">
-                <div class="input-group">
-                    <div class="input-group-prepend">
-                        <button class="btn btn-outline-light bg-white text-body px-4 dropdown-toggle" type="button" data-toggle="dropdown"
-                            aria-haspopup="true" aria-expanded="false">Courses</button>
-                        <div class="dropdown-menu">
-                            <a class="dropdown-item" href="#">Courses 1</a>
-                            <a class="dropdown-item" href="#">Courses 2</a>
-                            <a class="dropdown-item" href="#">Courses 3</a>
-                        </div>
+    <div class="container text-center my-5 py-5">
+        <h1 class="text-white mt-4 mb-4">Learn From Home</h1>
+        <h1 class="text-white display-1 mb-5">Education Courses</h1>
+        <div class="mx-auto mb-5" style="width: 100%; max-width: 600px;">
+            <div class="input-group">
+                <div class="input-group-prepend">
+                    <button class="btn btn-outline-light bg-white text-body px-4 dropdown-toggle" type="button" data-toggle="dropdown"
+                        aria-haspopup="true" aria-expanded="false">Courses</button>
+                    <div class="dropdown-menu">
+                        <a class="dropdown-item" href="#">Courses 1</a>
+                        <a class="dropdown-item" href="#">Courses 2</a>
+                        <a class="dropdown-item" href="#">Courses 3</a>
                     </div>
-                    <input type="text" class="form-control border-light" style="padding: 30px 25px;" placeholder="Keyword">
-                    <div class="input-group-append">
-                        <button class="btn btn-secondary px-4 px-lg-5">Search</button>
-                    </div>
+                </div>
+                <input type="text" class="form-control border-light" style="padding: 30px 25px;" placeholder="Keyword">
+                <div class="input-group-append">
+                    <button class="btn btn-secondary px-4 px-lg-5">Search</button>
                 </div>
             </div>
         </div>
     </div>
+</div>
     <!-- Header End -->
 
 
@@ -107,55 +93,62 @@
     </div>
     <!-- About End -->
 
-
     <!-- Feature Start -->
-    <div class="container-fluid bg-image" style="margin: 90px 0;">
-        <div class="container">
-            <div class="row">
-                <div class="col-lg-7 my-5 pt-5 pb-lg-5">
-                    <div class="section-title position-relative mb-4">
-                        <h6 class="d-inline-block position-relative text-secondary text-uppercase pb-2">Why Choose Us?</h6>
-                        <h1 class="display-4">Why You Should Start Learning with Us?</h1>
-                    </div>
-                    <p class="mb-4 pb-2">Aliquyam accusam clita nonumy ipsum sit sea clita ipsum clita, ipsum dolores amet voluptua duo dolores et sit ipsum rebum, sadipscing et erat eirmod diam kasd labore clita est. Diam sanctus gubergren sit rebum clita amet.</p>
-                    <div class="d-flex mb-3">
-                        <div class="btn-icon bg-primary mr-4">
-                            <i class="fa fa-2x fa-graduation-cap text-white"></i>
-                        </div>
-                        <div class="mt-n1">
-                            <h4>Skilled Instructors</h4>
-                            <p>Labore rebum duo est Sit dolore eos sit tempor eos stet, vero vero clita magna kasd no nonumy et eos dolor magna ipsum.</p>
-                        </div>
-                    </div>
-                    <div class="d-flex mb-3">
-                        <div class="btn-icon bg-secondary mr-4">
-                            <i class="fa fa-2x fa-certificate text-white"></i>
-                        </div>
-                        <div class="mt-n1">
-                            <h4>International Certificate</h4>
-                            <p>Labore rebum duo est Sit dolore eos sit tempor eos stet, vero vero clita magna kasd no nonumy et eos dolor magna ipsum.</p>
-                        </div>
-                    </div>
-                    <div class="d-flex">
-                        <div class="btn-icon bg-warning mr-4">
-                            <i class="fa fa-2x fa-book-reader text-white"></i>
-                        </div>
-                        <div class="mt-n1">
-                            <h4>Online Classes</h4>
-                            <p class="m-0">Labore rebum duo est Sit dolore eos sit tempor eos stet, vero vero clita magna kasd no nonumy et eos dolor magna ipsum.</p>
-                        </div>
-                    </div>
-                </div>
-                <div class="col-lg-5" style="min-height: 500px;">
-                    <div class="position-relative h-100">
-                        <img class="position-absolute w-100 h-100" src="{{URL}}/resources/assets/img/feature.jpg" style="object-fit: cover;">
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
-    <!-- Feature Start -->
+    <div class="container-fluid bg-image" 
+    style="margin: 90px 0; 
+           background: linear-gradient(rgba(40, 120, 235, 0.05), rgba(40, 120, 235, 0.05)), url('{{URL}}/resources/assets/img/bg-image.jpg') center center no-repeat; 
+           background-size: cover; 
+           background-attachment: fixed;">
+   
+   <div class="container">
+       <div class="row">
+           <div class="col-lg-7 my-5 pt-5 pb-lg-5">
+               <div class="section-title position-relative mb-4">
+                   <h6 class="d-inline-block position-relative text-secondary text-uppercase pb-2">Why Choose Us?</h6>
+                   <h1 class="display-4">Why You Should Start Learning with Us?</h1>
+               </div>
+               <p class="mb-4 pb-2">Aliquyam accusam clita nonumy ipsum sit sea clita ipsum clita, ipsum dolores amet voluptua duo dolores et sit ipsum rebum, sadipscing et erat eirmod diam kasd labore clita est. Diam sanctus gubergren sit rebum clita amet.</p>
+               
+               <div class="d-flex mb-3">
+                   <div class="btn-icon bg-primary mr-4">
+                       <i class="fa fa-2x fa-graduation-cap text-white"></i>
+                   </div>
+                   <div class="mt-n1">
+                       <h4>Skilled Instructors</h4>
+                       <p>Labore rebum duo est Sit dolore eos sit tempor eos stet, vero vero clita magna kasd no nonumy et eos dolor magna ipsum.</p>
+                   </div>
+               </div>
 
+               <div class="d-flex mb-3">
+                   <div class="btn-icon bg-secondary mr-4">
+                       <i class="fa fa-2x fa-certificate text-white"></i>
+                   </div>
+                   <div class="mt-n1">
+                       <h4>International Certificate</h4>
+                       <p>Labore rebum duo est Sit dolore eos sit tempor eos stet, vero vero clita magna kasd no nonumy et eos dolor magna ipsum.</p>
+                   </div>
+               </div>
+
+               <div class="d-flex">
+                   <div class="btn-icon bg-warning mr-4">
+                       <i class="fa fa-2x fa-book-reader text-white"></i>
+                   </div>
+                   <div class="mt-n1">
+                       <h4>Online Classes</h4>
+                       <p class="m-0">Labore rebum duo est Sit dolore eos sit tempor eos stet, vero vero clita magna kasd no nonumy et eos dolor magna ipsum.</p>
+                   </div>
+               </div>
+           </div>
+
+           <div class="col-lg-5" style="min-height: 500px;">
+               <div class="position-relative h-100">
+                   <img class="position-absolute w-100 h-100" src="{{URL}}/resources/assets/img/feature.jpg" style="object-fit: cover;">
+               </div>
+           </div>
+       </div>
+   </div>
+</div>
+   <!-- Feature end -->
 
     <!-- Courses Start -->
     <div class="container-fluid px-0 py-5">
@@ -259,7 +252,11 @@
                 </div>
             </div>
         </div>
-        <div class="row justify-content-center bg-image mx-0 mb-5">
+
+        <div class="row justify-content-center bg-image mx-0 mb-5" style="margin: 90px 0; 
+        background: linear-gradient(rgba(40, 120, 235, 0.05), rgba(40, 120, 235, 0.05)), url('{{URL}}/resources/assets/img/bg-image.jpg') center center no-repeat; 
+        background-size: cover; 
+        background-attachment: fixed;">
             <div class="col-lg-6 py-5">
                 <div class="bg-white p-5 my-5">
                     <h1 class="text-center mb-4">30% Off For New Students</h1>
@@ -368,47 +365,51 @@
     </div>
     <!-- Team End -->
 
-
     <!-- Testimonial Start -->
-    <div class="container-fluid bg-image py-5" style="margin: 90px 0;">
-        <div class="container py-5">
-            <div class="row align-items-center">
-                <div class="col-lg-5 mb-5 mb-lg-0">
-                    <div class="section-title position-relative mb-4">
-                        <h6 class="d-inline-block position-relative text-secondary text-uppercase pb-2">Testimonial</h6>
-                        <h1 class="display-4">What Say Our Students</h1>
-                    </div>
-                    <p class="m-0">Dolor est dolores et nonumy sit labore dolores est sed rebum amet, justo duo ipsum sanctus dolore magna rebum sit et. Diam lorem ea sea at. Nonumy et at at sed justo est nonumy tempor. Vero sea ea eirmod, elitr ea amet diam ipsum at amet. Erat sed stet eos ipsum diam</p>
-                </div>
-                <div class="col-lg-7">
-                    <div class="owl-carousel testimonial-carousel">
-                        <div class="bg-white p-5">
-                            <i class="fa fa-3x fa-quote-left text-primary mb-4"></i>
-                            <p>Sed et elitr ipsum labore dolor diam, ipsum duo vero sed sit est est ipsum eos clita est ipsum. Est nonumy tempor at kasd. Sed at dolor duo ut dolor, et justo erat dolor magna sed stet amet elitr duo lorem</p>
-                            <div class="d-flex flex-shrink-0 align-items-center mt-4">
-                                <img class="img-fluid mr-4" src="{{URL}}/resources/assets/img/testimonial-2.jpg" alt="">
-                                <div>
-                                    <h5>Student Name</h5>
-                                    <span>Web Design</span>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="bg-white p-5">
-                            <i class="fa fa-3x fa-quote-left text-primary mb-4"></i>
-                            <p>Sed et elitr ipsum labore dolor diam, ipsum duo vero sed sit est est ipsum eos clita est ipsum. Est nonumy tempor at kasd. Sed at dolor duo ut dolor, et justo erat dolor magna sed stet amet elitr duo lorem</p>
-                            <div class="d-flex flex-shrink-0 align-items-center mt-4">
-                                <img class="img-fluid mr-4" src="{{URL}}/resources/assets/img/testimonial-1.jpg" alt="">
-                                <div>
-                                    <h5>Student Name</h5>
-                                    <span>Web Design</span>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
+    <div class="container-fluid bg-image py-5" 
+    style="margin: 90px 0; 
+           background: linear-gradient(rgba(40, 120, 235, 0.05), rgba(40, 120, 235, 0.05)), url('{{URL}}/resources/assets/img/bg-image.jpg') center center no-repeat; 
+           background-size: cover; 
+           background-attachment: fixed;">
+   
+   <div class="container py-5">
+       <div class="row align-items-center">
+           <div class="col-lg-5 mb-5 mb-lg-0">
+               <div class="section-title position-relative mb-4">
+                   <h6 class="d-inline-block position-relative text-secondary text-uppercase pb-2">Testimonial</h6>
+                   <h1 class="display-4">What Say Our Students</h1>
+               </div>
+               <p class="m-0">Dolor est dolores et nonumy sit labore dolores est sed rebum amet, justo duo ipsum sanctus dolore magna rebum sit et. Diam lorem ea sea at. Nonumy et at at sed justo est nonumy tempor. Vero sea ea eirmod, elitr ea amet diam ipsum at amet. Erat sed stet eos ipsum diam</p>
+           </div>
+           <div class="col-lg-7">
+               <div class="owl-carousel testimonial-carousel">
+                   <div class="bg-white p-5">
+                       <i class="fa fa-3x fa-quote-left text-primary mb-4"></i>
+                       <p>Sed et elitr ipsum labore dolor diam, ipsum duo vero sed sit est est ipsum eos clita est ipsum. Est nonumy tempor at kasd. Sed at dolor duo ut dolor, et justo erat dolor magna sed stet amet elitr duo lorem</p>
+                       <div class="d-flex flex-shrink-0 align-items-center mt-4">
+                           <img class="img-fluid mr-4" src="{{URL}}/resources/assets/img/testimonial-2.jpg" alt="" style="width: 60px; height: 60px;">
+                           <div>
+                               <h5>Student Name</h5>
+                               <span>Web Design</span>
+                           </div>
+                       </div>
+                   </div>
+                   <div class="bg-white p-5">
+                       <i class="fa fa-3x fa-quote-left text-primary mb-4"></i>
+                       <p>Sed et elitr ipsum labore dolor diam, ipsum duo vero sed sit est est ipsum eos clita est ipsum. Est nonumy tempor at kasd. Sed at dolor duo ut dolor, et justo erat dolor magna sed stet amet elitr duo lorem</p>
+                       <div class="d-flex flex-shrink-0 align-items-center mt-4">
+                           <img class="img-fluid mr-4" src="{{URL}}/resources/assets/img/testimonial-1.jpg" alt="" style="width: 60px; height: 60px;">
+                           <div>
+                               <h5>Student Name</h5>
+                               <span>Web Design</span>
+                           </div>
+                       </div>
+                   </div>
+               </div>
+           </div>
+       </div>
+   </div>
+</div>
     <!-- Testimonial Start -->
 
 
@@ -479,96 +480,3 @@
     </div>
     <!-- Contact End -->
 
-
-    <!-- Footer Start -->
-    <div class="container-fluid position-relative overlay-top bg-dark text-white-50 py-5" style="margin-top: 90px;">
-        <div class="container mt-5 pt-5">
-            <div class="row">
-                <div class="col-md-6 mb-5">
-                    <a href="index.html" class="navbar-brand">
-                        <h1 class="mt-n2 text-uppercase text-white"><i class="fa fa-book-reader mr-3"></i>Edukate</h1>
-                    </a>
-                    <p class="m-0">Accusam nonumy clita sed rebum kasd eirmod elitr. Ipsum ea lorem at et diam est, tempor rebum ipsum sit ea tempor stet et consetetur dolores. Justo stet diam ipsum lorem vero clita diam</p>
-                </div>
-                <div class="col-md-6 mb-5">
-                    <h3 class="text-white mb-4">Newsletter</h3>
-                    <div class="w-100">
-                        <div class="input-group">
-                            <input type="text" class="form-control border-light" style="padding: 30px;" placeholder="Your Email Address">
-                            <div class="input-group-append">
-                                <button class="btn btn-primary px-4">Sign Up</button>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-            <div class="row">
-                <div class="col-md-4 mb-5">
-                    <h3 class="text-white mb-4">Get In Touch</h3>
-                    <p><i class="fa fa-map-marker-alt mr-2"></i>123 Street, New York, USA</p>
-                    <p><i class="fa fa-phone-alt mr-2"></i>+012 345 67890</p>
-                    <p><i class="fa fa-envelope mr-2"></i>info@example.com</p>
-                    <div class="d-flex justify-content-start mt-4">
-                        <a class="text-white mr-4" href="#"><i class="fab fa-2x fa-twitter"></i></a>
-                        <a class="text-white mr-4" href="#"><i class="fab fa-2x fa-facebook-f"></i></a>
-                        <a class="text-white mr-4" href="#"><i class="fab fa-2x fa-linkedin-in"></i></a>
-                        <a class="text-white" href="#"><i class="fab fa-2x fa-instagram"></i></a>
-                    </div>
-                </div>
-                <div class="col-md-4 mb-5">
-                    <h3 class="text-white mb-4">Our Courses</h3>
-                    <div class="d-flex flex-column justify-content-start">
-                        <a class="text-white-50 mb-2" href="#"><i class="fa fa-angle-right mr-2"></i>Web Design</a>
-                        <a class="text-white-50 mb-2" href="#"><i class="fa fa-angle-right mr-2"></i>Apps Design</a>
-                        <a class="text-white-50 mb-2" href="#"><i class="fa fa-angle-right mr-2"></i>Marketing</a>
-                        <a class="text-white-50 mb-2" href="#"><i class="fa fa-angle-right mr-2"></i>Research</a>
-                        <a class="text-white-50" href="#"><i class="fa fa-angle-right mr-2"></i>SEO</a>
-                    </div>
-                </div>
-                <div class="col-md-4 mb-5">
-                    <h3 class="text-white mb-4">Quick Links</h3>
-                    <div class="d-flex flex-column justify-content-start">
-                        <a class="text-white-50 mb-2" href="#"><i class="fa fa-angle-right mr-2"></i>Privacy Policy</a>
-                        <a class="text-white-50 mb-2" href="#"><i class="fa fa-angle-right mr-2"></i>Terms & Condition</a>
-                        <a class="text-white-50 mb-2" href="#"><i class="fa fa-angle-right mr-2"></i>Regular FAQs</a>
-                        <a class="text-white-50 mb-2" href="#"><i class="fa fa-angle-right mr-2"></i>Help & Support</a>
-                        <a class="text-white-50" href="#"><i class="fa fa-angle-right mr-2"></i>Contact</a>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
-    <div class="container-fluid bg-dark text-white-50 border-top py-4" style="border-color: rgba(256, 256, 256, .1) !important;">
-        <div class="container">
-            <div class="row">
-                <div class="col-md-6 text-center text-md-left mb-3 mb-md-0">
-                    <p class="m-0">Copyright &copy; <a class="text-white" href="#">Your Site Name</a>. All Rights Reserved.
-                    </p>
-                </div>
-                <div class="col-md-6 text-center text-md-right">
-                    <p class="m-0">Designed by <a class="text-white" href="https://htmlcodex.com">HTML Codex</a> Distributed by <a href="https://themewagon.com" target="_blank">ThemeWagon</a></p>
-                </div>
-            </div>
-        </div>
-    </div>
-    <!-- Footer End -->
-
-
-    <!-- Back to Top -->
-    <a href="#" class="btn btn-lg btn-primary rounded-0 btn-lg-square back-to-top"><i class="fa fa-angle-double-up"></i></a>
-
-
-    <!-- JavaScript Libraries -->
-    <script src="https://code.jquery.com/jquery-3.4.1.min.js"></script>
-    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/js/bootstrap.bundle.min.js"></script>
-
-    <script src="{{URL}}/resources/lib/easing/easing.min.js"></script>
-    <script src="{{URL}}/resources/lib/waypoints/waypoints.min.js"></script>
-    <script src="{{URL}}/resources/lib/counterup/counterup.min.js"></script>
-    <script src="{{URL}}/resources/lib/owlcarousel/owl.carousel.min.js"></script>
-
-    <!-- Template Javascript -->
-    <script src="{{URL}}/resources/js/main.js"></script>
-</body>
-
-</html>

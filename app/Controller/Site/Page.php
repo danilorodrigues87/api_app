@@ -14,29 +14,37 @@ class Page {
         'sobre' => [
             'label' => 'Sobre',
             'link' => URL.'/sobre'
+        ],
+        'cursos' => [
+            'label' => 'Cursos',
+            'link' => URL.'/cursos'
+        ],
+        'contato' => [
+            'label' => 'Contato',
+            'link' => URL.'/contato'
         ]
 
     ];
 
 
     public static function getMenu($currentModule){
-        //LINKS DO MENU
-        $links = '';
-
-        //ITERA OS MODULOS
-        foreach(self::$modules as $hash=>$module){
-            $links .= View::render('site/menu/link',[
-                'label' => $module['label'],
-                'link' => $module['links']
-            ]); 
-
-            return View::render('site/menu/box',[
-                'links' => $links
-            ]);
-
-        }
-
-    }
+      // LINKS DO MENU
+      $links = '';
+  
+      // ITERA OS MODULOS
+      foreach(self::$modules as $hash => $module){
+          $links .= View::render('site/menu/link', [
+              'label'   => $module['label'],
+              'link'    => $module['link'],
+              'current' => $hash == $currentModule ? 'active' : '' 
+          ]); 
+      }
+  
+      // RETORNA A RENDERIZAÇÃO DO BOX (FORA DO LOOP)
+      return View::render('site/menu/box', [
+          'links' => $links
+      ]);
+  }
 
 
 	// RETORNA O CONTEUDO (VIEW) ESTRUTURA GENERICA PAGINA
@@ -47,7 +55,19 @@ class Page {
 		]);
 	}
 
+    //RENDERIZA A VIEW DO PANEL
+  public static function getPanel($title,$content,$currentModule){
 
+    //RENDERIZA A VIEW DO TOP - MENU
+    $contentPanel = View::render('site/panel',[
+      'menu' => self::getMenu($currentModule),
+      'content' => $content
+    ]);
+
+    //RETONA A PAGINA RENDERIZADA
+    return self::getPage($title,$contentPanel);
+
+  }
 
 
 

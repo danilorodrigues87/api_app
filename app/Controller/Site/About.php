@@ -1,29 +1,19 @@
 <?php
-
 namespace App\Controller\Site;
-
 use \App\Utils\View;
 
-class About{
+class About extends Page{
 
 
 	//RETORNA A RENDERIZAÇÃO DA PÁGINA
 	public static function index($request){
 
-		//CONTEUDO DA PAGINA
-		$content = View::render('pages/about',[]);
+		// RETORNA A BASE DA PAGINA
+		$content = View::render('site/modules/sobre',[]);
 
-		//TOP E MENU DA PAGINA
-		$top_menu = View::render('pages/menu',[
-			
-		]);
+		// RETORNA A PÁGINA COMPLETA
+        return parent::getPanel('Sobre', $content, 'sobre',$request);
 
-		//RETORNA A PÁGINA COMPLETA
-		return View::render('pages/page',[
-			'title' => 'CTI - Sobre',
-			'content' => $content,
-			'top-menu' => $top_menu
-		]);
 	}
 
 }

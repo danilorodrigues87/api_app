@@ -1,7 +1,5 @@
 <?php
-
 namespace App\Controller\Site;
-
 use \App\Utils\View;
 
 class Home extends Page{
@@ -11,10 +9,10 @@ class Home extends Page{
 	public static function index($request){
 
 		// RETORNA A BASE DA PAGINA
-		$content = View::render('site/home',[]);
+		$content = View::render('site/modules/home',[]);
 
 		// RETORNA A PÁGINA COMPLETA
-        return parent::getPanel('Home', $content, 'Home',$request);
+        return parent::getPanel('Home', $content, 'home',$request);
 
 	}
 

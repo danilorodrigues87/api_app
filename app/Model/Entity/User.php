@@ -10,7 +10,8 @@ class User{
 	$email,
 	$cargo,
 	$rec_senha,
-	$senha;
+	$senha,
+	$ativacao;
 
 
 	//RETORNA UM USUÁRIO COM BASE NO EMAIL
@@ -77,10 +78,12 @@ class User{
 	}
 
 	//EXCLUI DO BANCO DE DADOS
-	public function excluir(){
+	public function ativacao(){
 
-		return (new Database('perfis_operadores'))->delete('id = '.$this->id);
-
+		//ATUALIZA OS DADOS PARA O BANCO DE DADOS
+		return (new Database('perfis_operadores'))->update('id = '.$this->id,[
+			'ativacao' => $this->ativacao
+		]);
 	}
 
 

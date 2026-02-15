@@ -1,0 +1,4 @@
+deployment:
+  tasks:
+    - export DEPLOYPATH=/home1/dncurs82/api.ctieducacional.com.br/
+    - /bin/cp -R * $DEPLOYPATH

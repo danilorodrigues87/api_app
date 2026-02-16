@@ -2,6 +2,8 @@
 
 namespace App\Controller\Api;
 use \App\Model\Entity\Camas as EntityCamas;
+use \App\Model\Entity\Membros;
+use \App\Model\Entity\Hospedagens;
 use \App\Model\Entity\Setores;
 use \App\Model\Db\Pagination;
 
@@ -24,12 +26,23 @@ class Camas extends Api{
 		//RESULTADOS DA PAGINA
 		$results = EntityCamas::getCamas(null,'id ASC', $obPagination->getLimit());
 
+		
+
 		//REDERIZA O ITEM
 		while ($obCama = $results->fetchObject(EntityCamas::class)) {
+			$hospede= 'Disponivel';
+		if($obCama->status_ocupacao){
+
+			$obHosp = Hospedagens::getHospedagemByCama((int)$obCama->id);
+			$obMembro = Membros::getMembroById($obHosp->membro_id);
+			$hospede = $obMembro->nome_completo;
+
+		}
 			$itens[] = [
 
 				'id' => (int)$obCama->id,
 				'numero_cama' => $obCama->numero_cama,
+				'nome_hospede' => $hospede,
 				'status_ocupacao' => $obCama->status_ocupacao
 
 			];

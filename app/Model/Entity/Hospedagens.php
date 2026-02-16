@@ -28,6 +28,13 @@ class Hospedagens{
 
 	}
 
+	//RETORNA COM BASE NO ID
+	public static function getHospedagemByCama($cama_id){
+
+		return self::getHospedagens('cama_id = '.$cama_id)->fetchObject(self::class);
+
+	}
+
 	//ENVIA PARA O BANCO
 	public function cadastrar(){
 		

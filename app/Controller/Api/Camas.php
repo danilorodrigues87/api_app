@@ -2,6 +2,7 @@
 
 namespace App\Controller\Api;
 use \App\Model\Entity\Camas as EntityCamas;
+use \App\Model\Entity\Setores;
 use \App\Model\Db\Pagination;
 
 class Camas extends Api{
@@ -21,14 +22,13 @@ class Camas extends Api{
 		$obPagination = new Pagination($quantidadeTotal,$paginaAtual,5);
 
 		//RESULTADOS DA PAGINA
-		$results = EntityCamas::getCamas(null,'id DESC', $obPagination->getLimit());
+		$results = EntityCamas::getCamas(null,'id ASC', $obPagination->getLimit());
 
 		//REDERIZA O ITEM
 		while ($obCama = $results->fetchObject(EntityCamas::class)) {
 			$itens[] = [
 
 				'id' => (int)$obCama->id,
-				'setor' => $obCama->setor,
 				'numero_cama' => $obCama->numero_cama,
 				'status_ocupacao' => $obCama->status_ocupacao
 
@@ -43,8 +43,31 @@ class Camas extends Api{
 
 		return [
 			'camas' => self::getCamaById($request,$obPagination),
-			'paginacao' => parent::getPagination($request,$obPagination)
+			'setores' => self::setoresParaSelect()
 		];
+	}
+
+	private static function setoresParaSelect(){
+
+		$itens = [];
+
+
+		//RESULTADOS DA PAGINA
+		$results = Setores::getSetores(null,'nome_setor ASC',);
+
+		//REDERIZA O ITEM
+		while ($obCama = $results->fetchObject(Setores::class)) {
+			$itens[] = [
+
+				'id' => (int)$obCama->id,
+				'nome_setor' => $obCama->nome_setor
+			];
+		}
+
+		//RETORNA OS DEPOIMENTOS
+		return $itens;
+
+
 	}
 
 

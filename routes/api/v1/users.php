@@ -8,7 +8,7 @@ $obRouter->post('/api/v1/login',[
 		'api'
 	],
 	function($request){
-		return new Response(201,Api\Users::logar($request),'application/json');
+		return new Response(200,Api\Usuarios::logar($request),'application/json');
 	}
 ]);
 
@@ -19,7 +19,7 @@ $obRouter->post('/api/v1/cadastro-usuario',[
 		'api'
 	],
 	function($request){
-		return new Response(201,Api\Users::cadNovoUsuario($request),'application/json');
+		return new Response(201,Api\Usuarios::cadNovoUsuario($request),'application/json');
 	}
 ]);
 
@@ -29,7 +29,7 @@ $obRouter->get('/api/v1/usuarios',[
 		'api'
 	],
 	function($request){
-		return new Response(200,Api\Users::buscaUsuarios($request),'application/json');
+		return new Response(200,Api\Usuarios::buscaUsuarios($request),'application/json');
 	}
 ]);
 
@@ -39,7 +39,7 @@ $obRouter->get('/api/v1/usuario/{id}',[
 		'api'
 	],
 	function($request,$id){
-		return new Response(200,Api\Users::buscaUsuarioPeloId($request,$id),'application/json');
+		return new Response(200,Api\Usuarios::buscaUsuarioPeloId($request,$id),'application/json');
 	}
 ]);
 
@@ -50,7 +50,7 @@ $obRouter->put('/api/v1/edit-usuario/{id}',[
 		'api'
 	],
 	function($request,$id){
-		return new Response(200,Api\Users::editUsuario($request,$id),'application/json');
+		return new Response(200,Api\Usuarios::editUsuario($request,$id),'application/json');
 	}
 ]);
 
@@ -60,6 +60,6 @@ $obRouter->put('/api/v1/ativacao-usuario/{id}',[
 		'api'
 	],
 	function($request,$id){
-		return new Response(200,Api\Users::ativacaoUsuario($request,$id),'application/json');
+		return new Response(200,Api\Usuarios::ativacaoUsuario($request,$id),'application/json');
 	}
 ]);

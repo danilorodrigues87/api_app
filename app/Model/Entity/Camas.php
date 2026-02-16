@@ -7,7 +7,8 @@ class Camas{
 
 	public 
 	$id,
-	$setor,
+	$setor_id,
+	$nome_setor,
 	$numero_cama,
 	$status_ocupacao;
 
@@ -32,7 +33,7 @@ class Camas{
 		$obDatabase = new Database('camas');
 		$this->id = $obDatabase->insert([
 
-			'setor' => $this->setor,
+			'setor_id' => $this->setor_id,
 			'numero_cama' => $this->numero_cama,
 			'status_ocupacao' => $this->status_ocupacao
 
@@ -67,7 +68,7 @@ class Camas{
 
 		//ATUALIZA OS DADOS PARA O BANCO DE DADOS
 		return (new Database('camas'))->update('id = '.$this->id,[
-			'setor' => $this->setor,
+			'setor_id' => $this->setor_id,
 			'numero_cama' => $this->numero_cama,
 			'status_ocupacao' => $this->status_ocupacao
 		]);

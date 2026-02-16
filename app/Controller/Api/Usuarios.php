@@ -1,12 +1,12 @@
 <?php 
 
 namespace App\Controller\Api;
-use \App\Model\Entity\User;
+use \App\Model\Entity\User as EntityUsers;
 use \App\Model\Db\Pagination;
 
-class Users extends Api{
+class Usuarios extends Api{
 
-	//RESPOMSÁVEL POR GERAR UM TOKEN JWT
+
 	public static function logar($request){
 		$postVars = $request->getPostVars();
 
@@ -16,13 +16,15 @@ class Users extends Api{
 		}
 
 		//VERIFICA O USUÁRIO POR EMAIL
-		$obUser = User::getUserByEmail($postVars['email']);
+		$obUser = EntityUsers::getUserByEmail($postVars['email']);
+
+		
+		if(!$obUser instanceof EntityUsers or !password_verify($postVars['senha'], $obUser->senha)){
+			throw new \Exception("O usuário ou senha são inválidoss", 400);
+		}
 
 		if(!$obUser->ativacao){
 			throw new \Exception("O usuário não altorizado", 400);
-		}
-		if(!$obUser instanceof User or !password_verify($postVars['senha'], $obUser->senha)){
-			throw new \Exception("O usuário ou senha são inválidoss", 400);
 		}
 
 		//RETORNA O TOKEN GERADO
@@ -38,7 +40,7 @@ class Users extends Api{
 		$itens = [];
 
 		//QUANTIDADE TOTAL DE REGISTROS
-		$quantidadeTotal = User::getUser(null,null,null,'COUNT(*) as qtd')->fetchObject()->qtd;
+		$quantidadeTotal = EntityUsers::getUser(null,null,null,'COUNT(*) as qtd')->fetchObject()->qtd;
 
 		//PAGINA ATUAL
 		$queryParams = $request->getQueryParams();
@@ -48,10 +50,10 @@ class Users extends Api{
 		$obPagination = new Pagination($quantidadeTotal,$paginaAtual,5);
 
 		//RESULTADOS DA PAGINA
-		$results = User::getUser(null,'id DESC', $obPagination->getLimit());
+		$results = EntityUsers::getUser(null,'id DESC', $obPagination->getLimit());
 
 		//REDERIZA O ITEM
-		while ($obUser = $results->fetchObject(User::class)) {
+		while ($obUser = $results->fetchObject(EntityUsers::class)) {
 			$itens[] = [
 
 				'id' => (int)$obUser->id,
@@ -82,9 +84,9 @@ class Users extends Api{
 		if(!is_numeric($id)){
 			throw new \Exception("O id '".$id."' não é válido", 400);
 		}
-		$obUser = User::getUserById($id);
+		$obUser = EntityUsers::getUserById($id);
 		
-		if(!$obUser instanceof User){
+		if(!$obUser instanceof EntityUsers){
 			throw new \Exception("O registro ".$id." não foi encontrado", 404);
 		}
 
@@ -124,15 +126,15 @@ class Users extends Api{
 		}
 
 		//BUSCA O USUÁRIO PELO EMAIL
-		$obUser = User::getUserByEmail($postVars['email']);
+		$obUser = EntityUsers::getUserByEmail($postVars['email']);
 
-		if($obUser instanceof User){
+		if($obUser instanceof EntityUsers){
 			throw new \Exception("Esse email já existe",400);
 		}
 
 
 // Instancia o objeto corretamente
-		$obUser = new User;
+		$obUser = new EntityUsers;
 // Atribui os valores ao objeto correto
 
 		$obUser->nome       = filter_var($postVars['nome'] ?? '', FILTER_SANITIZE_SPECIAL_CHARS);
@@ -168,10 +170,10 @@ class Users extends Api{
 
 
 		//BUSCA O REGISTRO
-		$obUser = User::getUserById($id);
+		$obUser = EntityUsers::getUserById($id);
 
 		//VALIDA A INSTANCIA
-		if(!$obUser instanceof User){
+		if(!$obUser instanceof EntityUsers){
 			throw new \Exception("O registro ".$id." não foi encontrada", 404);
 		}
 
@@ -194,10 +196,10 @@ class Users extends Api{
 	public static function ativacaoUsuario($request,$id){
 
 		//BUSCA O REGISTRO
-		$obUser = User::getUserById($id);
+		$obUser = EntityUsers::getUserById($id);
 
 		//VALIDA A INSTANCIA
-		if(!$obUser instanceof User){
+		if(!$obUser instanceof EntityUsers){
 			throw new \Exception("O registro ".$id." não foi encontrado", 404);
 		}
 		if($obUser->ativacao){

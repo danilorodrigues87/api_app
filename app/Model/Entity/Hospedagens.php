@@ -11,6 +11,8 @@ class Hospedagens{
 	$tipo_local,
 	$cama_id,
 	$numero_cama,
+	$nome_membro,
+	$cidade,
 	$anfitriao_nome,
 	$anfitriao_telefone,
 	$anfitriao_endereco,
@@ -95,7 +97,10 @@ class Hospedagens{
 	public function atualizaStatus(){
 
 		return (new Database('hospedagens'))->update('id = '.$this->id,[
-			'status' => $this->status,
+			'status' => $this->status
+		]);
 	}
+
+
 
 }

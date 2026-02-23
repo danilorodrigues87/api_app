@@ -12,6 +12,7 @@ class Hospedagens{
 	$cama_id,
 	$numero_cama,
 	$nome_membro,
+	$obs_medicas,
 	$cidade,
 	$anfitriao_nome,
 	$anfitriao_telefone,

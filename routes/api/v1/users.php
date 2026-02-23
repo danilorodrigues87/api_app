@@ -63,3 +63,13 @@ $obRouter->put('/api/v1/ativacao-usuario/{id}',[
 		return new Response(200,Api\Usuarios::ativacaoUsuario($request,$id),'application/json');
 	}
 ]);
+
+//ROTA DE ATIVAÇÃO DESATIVAÇÃO DE USUÁRIO VIA API
+$obRouter->put('/api/v1/atualiza-senha/{id}',[
+	'middlewares' => [
+		'api'
+	],
+	function($request,$id){
+		return new Response(200,Api\Usuarios::novaSenha($request,$id),'application/json');
+	}
+]);

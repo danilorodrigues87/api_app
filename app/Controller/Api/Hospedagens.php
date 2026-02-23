@@ -8,42 +8,43 @@ use \App\Model\Db\Pagination;
 class Hospedagens extends Api{
 
 	private static function getHospedagemItens($request,&$obPagination){
-		$itens = [];
 
-		//QUANTIDADE TOTAL DE REGISTROS
-		$quantidadeTotal = EntityHosp::getHospedagens(null,null,null,'COUNT(*) as qtd')->fetchObject()->qtd;
+		// 1. DEFINIÇÃO DOS CAMPOS (Adicionado membros.nome)
+    $fields = 'hospedagens.*, camas.numero_cama, membros.nome_completo as nome_membro,membros.cidade_residencia as cidade';
+    
+    // 2. DEFINIÇÃO DOS JOINS (Adicionado Join de membros)
+    $innerJoin = ' INNER JOIN camas ON hospedagens.cama_id = camas.id';
+    $innerJoin .= ' INNER JOIN membros ON hospedagens.membro_id = membros.id';
+    
+    $where = "status = 'checkin' OR status = 'pendende' ";
 
-		//PAGINA ATUAL
-		$queryParams = $request->getQueryParams();
-		$paginaAtual = $queryParams['page'] ?? 1;
+    // QUANTIDADE TOTAL DE REGISTROS
+    $quantidadeTotal = EntityHosp::getHospedagens($where, null, null, 'COUNT(*) as qtd', $innerJoin)->fetchObject()->qtd;
 
-		//INSTANCIA DE PAGINAÇÃO
-		$obPagination = new Pagination($quantidadeTotal,$paginaAtual,5);
+    // PAGINA ATUAL
+    $queryParams = $request->getQueryParams();
+    $paginaAtual = $queryParams['page'] ?? 1;
 
-		//RESULTADOS DA PAGINA
-		$results = EntityHosp::getHospedagens(null,'id DESC', $obPagination->getLimit());
+    // INSTANCIA DE PAGINAÇÃO
+    $obPagination = new Pagination($quantidadeTotal, $paginaAtual, 5);
 
-		//REDERIZA O ITEM
-		while ($obHosp = $results->fetchObject(EntityHosp::class)) {
-			$itens[] = [
+    // RESULTADOS DA PAGINA
+    $results = EntityHosp::getHospedagens($where, 'hospedagens.id DESC', $obPagination->getLimit(), $fields, $innerJoin);
 
-			'id' => (int)$obHosp->id,
-			'membro_id' => (int)$obHosp->membro_id,
-			'operador_id' => (int)$obHosp->operador_id,
-			'tipo_local' => $obHosp->tipo_local,
-			'cama_id' => (int)$obHosp->cama_id,
-			'dias_estadia' => (int)$obHosp->dias_estadia,
-			'anfitriao_nome' => $obHosp->anfitriao_nome,
-			'anfitriao_telefone' => $obHosp->anfitriao_telefone,
-			'anfitriao_endereco' => $obHosp->anfitriao_endereco,
-			'checkin_data' => $obHosp->checkin_data,
-			'checkout_data' => $obHosp->checkout_data,
-			'status' => $obHosp->status
-			];
-		}
+    $itens = [];
+    // RENDERIZA O ITEM
+    while ($obHosp = $results->fetchObject(EntityHosp::class)) {
+        $itens[] = [
+            'id'              => (int)$obHosp->id,
+            'nome_membro'     => $obHosp->nome_membro, // Novo campo adicionado
+            'numero_cama'     => $obHosp->numero_cama, 
+            'cidade'          => $obHosp->cidade, 
+            'checkin_data'    => date('d/m/Y H:i', strtotime($obHosp->checkin_data)),
+            'status'          => $obHosp->status
+        ];
+    }
 
-		//RETORNA OS DEPOIMENTOS
-		return $itens;
+    return $itens;
 	}
 
 	public static function getHospedagens($request){

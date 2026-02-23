@@ -9,18 +9,26 @@ class Membros extends Api{
 	private static function getMembroItens($request,&$obPagination){
 		$itens = [];
 
-		//QUANTIDADE TOTAL DE REGISTROS
-		$quantidadeTotal = EntityMembros::getMembros(null,null,null,'COUNT(*) as qtd')->fetchObject()->qtd;
+		
 
 		//PAGINA ATUAL
 		$queryParams = $request->getQueryParams();
 		$paginaAtual = $queryParams['page'] ?? 1;
+		$busca = $queryParams['busca'] ?? false;
+
+		$where='';
+		if ($busca) {
+			$where = "nome_completo LIKE '%$busca%' OR telefone LIKE '%$busca%' OR cidade_residencia LIKE '%$busca%' OR admin_pertencente LIKE '%$busca%' OR codigo_barras LIKE '%$busca%'";
+		}
+
+		//QUANTIDADE TOTAL DE REGISTROS
+		$quantidadeTotal = EntityMembros::getMembros($where,null,null,'COUNT(*) as qtd')->fetchObject()->qtd;
 
 		//INSTANCIA DE PAGINAÇÃO
-		$obPagination = new Pagination($quantidadeTotal,$paginaAtual,5);
+		$obPagination = new Pagination($quantidadeTotal,$paginaAtual,10);
 
 		//RESULTADOS DA PAGINA
-		$results = EntityMembros::getMembros(null,'id DESC', $obPagination->getLimit());
+		$results = EntityMembros::getMembros($where,'id DESC', $obPagination->getLimit());
 
 		//REDERIZA O ITEM
 		while ($obMembro = $results->fetchObject(EntityMembros::class)) {
@@ -32,9 +40,6 @@ class Membros extends Api{
 				'cidade_residencia' => $obMembro->cidade_residencia,
 				'ministerio' => $obMembro->ministerio,
 				'admin_pertencente' => $obMembro->admin_pertencente,
-				'data_chegada' => $obMembro->data_chegada,
-				'dias_estadia' => $obMembro->dias_estadia,
-				'observacoes_medicas' => $obMembro->observacoes_medicas,
 				'codigo_barras' => $obMembro->codigo_barras
 
 			];
@@ -47,7 +52,7 @@ class Membros extends Api{
 	public static function buscaMembros($request){
 
 		return [
-			'hospedagens' => self::getMembroItens($request,$obPagination),
+			'membros' => self::getMembroItens($request,$obPagination),
 			'paginacao' => parent::getPagination($request,$obPagination)
 		];
 	}
@@ -71,9 +76,6 @@ class Membros extends Api{
 			'cidade_residencia' => $obMembro->cidade_residencia,
 			'ministerio' => $obMembro->ministerio,
 			'admin_pertencente' => $obMembro->admin_pertencente,
-			'data_chegada' => $obMembro->data_chegada,
-			'dias_estadia' => $obMembro->dias_estadia,
-			'observacoes_medicas' => $obMembro->observacoes_medicas,
 			'codigo_barras' => $obMembro->codigo_barras
 		];
 
@@ -99,9 +101,6 @@ class Membros extends Api{
 			'cidade_residencia' => $obMembro->cidade_residencia,
 			'ministerio' => $obMembro->ministerio,
 			'admin_pertencente' => $obMembro->admin_pertencente,
-			'data_chegada' => $obMembro->data_chegada,
-			'dias_estadia' => $obMembro->dias_estadia,
-			'observacoes_medicas' => $obMembro->observacoes_medicas,
 			'codigo_barras' => $obMembro->codigo_barras
 		];
 
@@ -124,31 +123,22 @@ class Membros extends Api{
 		if(!isset($postVars['admin_pertencente'])){
 			throw new \Exception("As informações nome, telefone, cidade, administração pertencente e data de são informações obrigatórias",400);
 		}
-		if(!isset($postVars['data_chegada'])){
-			throw new \Exception("As informações nome, telefone, cidade, administração pertencente e data de são informações obrigatórias",400);
-		}
+
 
 	// Instancia o objeto corretamente
-$obMembro = new EntityMembros;
+		$obMembro = new EntityMembros;
 
 // Atribui os valores ao objeto correto ($obMembro)
 // Usando FILTER_SANITIZE_SPECIAL_CHARS para compatibilidade com PHP 8.x
-$obMembro->nome_completo       = filter_var($postVars['nome_completo'] ?? '', FILTER_SANITIZE_SPECIAL_CHARS);
-$obMembro->telefone            = filter_var($postVars['telefone'] ?? '', FILTER_SANITIZE_SPECIAL_CHARS);
-$obMembro->cidade_residencia   = filter_var($postVars['cidade_residencia'] ?? '', FILTER_SANITIZE_SPECIAL_CHARS);
-$obMembro->ministerio          = filter_var($postVars['ministerio'] ?? '', FILTER_SANITIZE_SPECIAL_CHARS);
-$obMembro->admin_pertencente   = filter_var($postVars['admin_pertencente'] ?? '', FILTER_SANITIZE_SPECIAL_CHARS);
+		$obMembro->nome_completo       = filter_var($postVars['nome_completo'] ?? '', FILTER_SANITIZE_SPECIAL_CHARS);
+		$obMembro->telefone            = filter_var($postVars['telefone'] ?? '', FILTER_SANITIZE_SPECIAL_CHARS);
+		$obMembro->cidade_residencia   = filter_var($postVars['cidade_residencia'] ?? '', FILTER_SANITIZE_SPECIAL_CHARS);
+		$obMembro->ministerio          = filter_var($postVars['ministerio'] ?? '', FILTER_SANITIZE_SPECIAL_CHARS);
+		$obMembro->admin_pertencente   = filter_var($postVars['admin_pertencente'] ?? '', FILTER_SANITIZE_SPECIAL_CHARS);
+		$obMembro->codigo_barras   = filter_var($postVars['codigo_barras'] ?? '', FILTER_SANITIZE_SPECIAL_CHARS);
 
-// Datas: ideal validar o formato ou ao menos tratar como string simples
-$obMembro->data_chegada        = filter_var($postVars['data_chegada'] ?? '', FILTER_SANITIZE_SPECIAL_CHARS);
-
-// Números: garantindo que seja um inteiro
-$obMembro->dias_estadia        = filter_var($postVars['dias_estadia'] ?? 0, FILTER_SANITIZE_NUMBER_INT);
-
-$obMembro->observacoes_medicas = filter_var($postVars['observacoes_medicas'] ?? '', FILTER_SANITIZE_SPECIAL_CHARS);
-$obMembro->codigo_barras       = filter_var($postVars['codigo_barras'] ?? '', FILTER_SANITIZE_SPECIAL_CHARS);
 // Chama o cadastro no objeto que recebeu os dados
-$obMembro->cadastrar();
+		$obMembro->cadastrar();
 
 		//RETORNA OS DETALHES DO CADASTRADO
 		return [
@@ -158,9 +148,6 @@ $obMembro->cadastrar();
 			'cidade_residencia' => $obMembro->cidade_residencia,
 			'ministerio' => $obMembro->ministerio,
 			'admin_pertencente' => $obMembro->admin_pertencente,
-			'data_chegada' => $obMembro->data_chegada,
-			'dias_estadia' => $obMembro->dias_estadia,
-			'observacoes_medicas' => $obMembro->observacoes_medicas,
 			'codigo_barras' => $obMembro->codigo_barras
 		];
 	}
@@ -183,9 +170,6 @@ $obMembro->cadastrar();
 		if(!isset($postVars['admin_pertencente'])){
 			throw new \Exception("As informações nome, telefone, cidade, administração pertencente e data de são informações obrigatórias",400);
 		}
-		if(!isset($postVars['data_chegada'])){
-			throw new \Exception("As informações nome, telefone, cidade, administração pertencente e data de são informações obrigatórias",400);
-		}
 
 
 		//BUSCA O REGISTRO
@@ -199,20 +183,13 @@ $obMembro->cadastrar();
 		//ATUALIZA O REGISTRO
 		// Atribui os valores ao objeto correto ($obMembro)
 // Usando FILTER_SANITIZE_SPECIAL_CHARS para compatibilidade com PHP 8.x
-$obMembro->nome_completo       = filter_var($postVars['nome_completo'] ?? '', FILTER_SANITIZE_SPECIAL_CHARS);
-$obMembro->telefone            = filter_var($postVars['telefone'] ?? '', FILTER_SANITIZE_SPECIAL_CHARS);
-$obMembro->cidade_residencia   = filter_var($postVars['cidade_residencia'] ?? '', FILTER_SANITIZE_SPECIAL_CHARS);
-$obMembro->ministerio          = filter_var($postVars['ministerio'] ?? '', FILTER_SANITIZE_SPECIAL_CHARS);
-$obMembro->admin_pertencente   = filter_var($postVars['admin_pertencente'] ?? '', FILTER_SANITIZE_SPECIAL_CHARS);
+		$obMembro->nome_completo       = filter_var($postVars['nome_completo'] ?? '', FILTER_SANITIZE_SPECIAL_CHARS);
+		$obMembro->telefone            = filter_var($postVars['telefone'] ?? '', FILTER_SANITIZE_SPECIAL_CHARS);
+		$obMembro->cidade_residencia   = filter_var($postVars['cidade_residencia'] ?? '', FILTER_SANITIZE_SPECIAL_CHARS);
+		$obMembro->ministerio          = filter_var($postVars['ministerio'] ?? '', FILTER_SANITIZE_SPECIAL_CHARS);
+		$obMembro->admin_pertencente   = filter_var($postVars['admin_pertencente'] ?? '', FILTER_SANITIZE_SPECIAL_CHARS);
+		$obMembro->codigo_barras   = filter_var($postVars['codigo_barras'] ?? '', FILTER_SANITIZE_SPECIAL_CHARS);
 
-// Datas: ideal validar o formato ou ao menos tratar como string simples
-$obMembro->data_chegada        = filter_var($postVars['data_chegada'] ?? '', FILTER_SANITIZE_SPECIAL_CHARS);
-
-// Números: garantindo que seja um inteiro
-$obMembro->dias_estadia        = filter_var($postVars['dias_estadia'] ?? 0, FILTER_SANITIZE_NUMBER_INT);
-
-$obMembro->observacoes_medicas = filter_var($postVars['observacoes_medicas'] ?? '', FILTER_SANITIZE_SPECIAL_CHARS);
-$obMembro->codigo_barras       = filter_var($postVars['codigo_barras'] ?? '', FILTER_SANITIZE_SPECIAL_CHARS);
 		$obMembro->atualizar();
 
 		//RETORNA OS DETALHES
@@ -223,9 +200,6 @@ $obMembro->codigo_barras       = filter_var($postVars['codigo_barras'] ?? '', FI
 			'cidade_residencia' => $obMembro->cidade_residencia,
 			'ministerio' => $obMembro->ministerio,
 			'admin_pertencente' => $obMembro->admin_pertencente,
-			'data_chegada' => $obMembro->data_chegada,
-			'dias_estadia' => $obMembro->dias_estadia,
-			'observacoes_medicas' => $obMembro->observacoes_medicas,
 			'codigo_barras' => $obMembro->codigo_barras
 		];
 	}

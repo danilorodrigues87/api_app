@@ -12,9 +12,6 @@ class Membros{
 	$cidade_residencia,
 	$ministerio,
 	$admin_pertencente,
-	$data_chegada,
-	$dias_estadia,
-	$observacoes_medicas,
 	$codigo_barras,
 	$created_at;
 
@@ -44,9 +41,6 @@ class Membros{
 			'cidade_residencia' => $this->cidade_residencia,
 			'ministerio' => $this->ministerio,
 			'admin_pertencente' => $this->admin_pertencente,
-			'data_chegada' => $this->data_chegada,
-			'dias_estadia' => $this->dias_estadia,
-			'observacoes_medicas' => $this->observacoes_medicas,
 			'codigo_barras' => $this->codigo_barras
 
 		]);
@@ -85,9 +79,6 @@ class Membros{
 			'cidade_residencia' => $this->cidade_residencia,
 			'ministerio' => $this->ministerio,
 			'admin_pertencente' => $this->admin_pertencente,
-			'data_chegada' => $this->data_chegada,
-			'dias_estadia' => $this->dias_estadia,
-			'observacoes_medicas' => $this->observacoes_medicas,
 			'codigo_barras' => $this->codigo_barras
 		]);
 

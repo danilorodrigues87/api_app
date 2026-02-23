@@ -10,21 +10,11 @@ use \App\Model\Db\Pagination;
 class Camas extends Api{
 
 
-	private static function getCamaById($request,&$obPagination){
+	private static function getCamasItens($request,&$obPagination){
 		$itens = [];
 
-		//QUANTIDADE TOTAL DE REGISTROS
-		$quantidadeTotal = EntityCamas::getCamas(null,null,null,'COUNT(*) as qtd')->fetchObject()->qtd;
-
-		//PAGINA ATUAL
-		$queryParams = $request->getQueryParams();
-		$paginaAtual = $queryParams['page'] ?? 1;
-
-		//INSTANCIA DE PAGINAÇÃO
-		$obPagination = new Pagination($quantidadeTotal,$paginaAtual,5);
-
 		//RESULTADOS DA PAGINA
-		$results = EntityCamas::getCamas(null,'id ASC', $obPagination->getLimit());
+		$results = EntityCamas::getCamas(null,'id ASC');
 
 		
 
@@ -41,6 +31,7 @@ class Camas extends Api{
 			$itens[] = [
 
 				'id' => (int)$obCama->id,
+				'setor_id' => $obCama->setor_id,
 				'numero_cama' => $obCama->numero_cama,
 				'nome_hospede' => $hospede,
 				'status_ocupacao' => $obCama->status_ocupacao
@@ -55,7 +46,7 @@ class Camas extends Api{
 	public static function buscaCamas($request){
 
 		return [
-			'camas' => self::getCamaById($request,$obPagination),
+			'camas' => self::getCamasItens($request,$obPagination),
 			'setores' => self::setoresParaSelect()
 		];
 	}

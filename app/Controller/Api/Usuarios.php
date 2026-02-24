@@ -210,7 +210,12 @@ class Usuarios extends Api{
     $obUser = EntityUsers::getUserById($id);
 
     // Valida se o usuário existe e se a senha atual confere
-    if(!$obUser instanceof EntityUsers or !password_verify($postVars['senhaAtual'], $obUser->senha)){
+    if(!$obUser instanceof EntityUsers){
+        throw new \Exception("Não foi possivel localizar o usuário", 400);
+    }
+
+    // Valida se o usuário existe e se a senha atual confere
+    if(!password_verify($postVars['senhaAtual'], $obUser->senha)){
         throw new \Exception("Senha atual inválida", 400);
     }
 

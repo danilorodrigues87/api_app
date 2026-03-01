@@ -107,9 +107,6 @@ if(!empty($postVars['checkout_data'])){
 }
 
 
-// Cria o objeto a partir do formato brasileiro e formata para o banco
-$checkin_data = \DateTime::createFromFormat('d/m/Y', $checkin_data_raw)->format('Y-m-d');
-
     if(empty($postVars['dias_estadia'])){
     	throw new \Exception("Dias de estadia não foi informado", 400);
     }

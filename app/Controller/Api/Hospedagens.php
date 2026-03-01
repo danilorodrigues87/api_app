@@ -96,28 +96,25 @@ public static function cadNovaHospedagem($request) {
     }
 
     if(empty($postVars['checkin_data'])){
-    	throw new \Exception("Data de chegada não foi informada", 400);
+        throw new \Exception("Data de chegada não foi informada", 400);
     }
 
-    
-$checkin_data = DateTimeHelper::dataEn($postVars['checkin_data']);
-$checkout_data = '';
-if(!empty($postVars['checkout_data'])){
-	$checkout_data = DateTimeHelper::dataEn($postVars['checkout_data']);
-}
-
+    $checkin_data = DateTimeHelper::dataEn($postVars['checkin_data']);
+    $checkout_data = '';
+    if(!empty($postVars['checkout_data'])){
+        $checkout_data = DateTimeHelper::dataEn($postVars['checkout_data']);
+    }
 
     if(empty($postVars['dias_estadia'])){
-    	throw new \Exception("Dias de estadia não foi informado", 400);
+        throw new \Exception("Dias de estadia não foi informado", 400);
     }
 
     if(empty($postVars['tipo_local'])){
-    	throw new \Exception("Selecione o tipo de hospedagem", 400);
+        throw new \Exception("Selecione o tipo de hospedagem", 400);
     }
 
-
     if(EntityHosp::getHospedagemByMemeberId($postVars['membro_id'])){
-    	throw new \Exception("O membro já tem uma hospedagem ativa", 400);
+        throw new \Exception("O membro já tem uma hospedagem ativa", 400);
     }
 
     $tipoLocal = $postVars['tipo_local'];
@@ -143,14 +140,13 @@ if(!empty($postVars['checkout_data'])){
         $camaId = (int)$camaArray['id'];
 
     } elseif ($tipoLocal === 'Casa de um irmão') {
-    	
         // Validação para casa de anfitrião
         if (empty($postVars['anfitriao_nome']) || 
-        	empty($postVars['anfitriao_telefone']) || 
-        	empty($postVars['anfitriao_telefone'])) {
+            empty($postVars['anfitriao_telefone']) || 
+            empty($postVars['anfitriao_endereco'])) {
             throw new \Exception("Informe os dados do anfitrião (Nome e Telefone e endereço).", 400);
-
-    }
+        } // <-- Faltava fechar este IF de validação
+    } // <-- Faltava fechar este ELSEIF
 
     // 3. INSTÂNCIA E SANEAMENTO
     $obHosp = new EntityHosp;
@@ -158,11 +154,11 @@ if(!empty($postVars['checkout_data'])){
     $obHosp->operador_id       = filter_var($postVars['operador_id'], FILTER_SANITIZE_NUMBER_INT);
     $obHosp->tipo_local        = filter_var($tipoLocal, FILTER_SANITIZE_SPECIAL_CHARS);
     $obHosp->checkin_data      = $checkin_data;
-    $obHosp->checkout_data     = $checkout_data ?? null;
+    $obHosp->checkout_data     = $checkout_data ?: null;
     $obHosp->dias_estadia      = filter_var($postVars['dias_estadia'], FILTER_SANITIZE_NUMBER_INT);
     $obHosp->cama_id           = $camaId;
     $obHosp->status            = filter_var($postVars['status'] ?? 'Pendente', FILTER_SANITIZE_SPECIAL_CHARS);
-    $obHosp->anfitriao_nome     = filter_var($postVars['anfitriao_nome'] ?? '', FILTER_SANITIZE_SPECIAL_CHARS);
+    $obHosp->anfitriao_nome    = filter_var($postVars['anfitriao_nome'] ?? '', FILTER_SANITIZE_SPECIAL_CHARS);
     $obHosp->anfitriao_telefone = filter_var($postVars['anfitriao_telefone'] ?? '', FILTER_SANITIZE_SPECIAL_CHARS);
     $obHosp->anfitriao_endereco = filter_var($postVars['anfitriao_endereco'] ?? '', FILTER_SANITIZE_SPECIAL_CHARS);
 
@@ -172,25 +168,20 @@ if(!empty($postVars['checkout_data'])){
     }
 
     // 5. ATUALIZAÇÃO DE STATUS (Ex: Ocupar a cama)
-    // Removi o 'return' que estava antes desta linha para que o código continue
     $sucessoStatus = self::statusHospedagem($obHosp->id);
     
-    if (!$sucessoStatus) {
-        // Logar erro interno, mas talvez não travar o retorno se a hospedagem já foi criada
-        // throw new \Exception("Hospedagem criada, mas falha ao atualizar status.", 500);
-    }
-
     // 6. RETORNO DOS DADOS
     return [
-        'id'                 => (int)$obHosp->id,
-        'membro_id'          => (int)$obHosp->membro_id,
-        'tipo_local'         => $obHosp->tipo_local,
-        'cama_id'            => $obHosp->cama_id,
-        'checkin_data'       => $obHosp->checkin_data,
-        'status'             => $obHosp->status,
-        'anfitriao_nome'     => $obHosp->anfitriao_nome
+        'id'                => (int)$obHosp->id,
+        'membro_id'         => (int)$obHosp->membro_id,
+        'tipo_local'        => $obHosp->tipo_local,
+        'cama_id'           => $obHosp->cama_id,
+        'checkin_data'      => $obHosp->checkin_data,
+        'status'            => $obHosp->status,
+        'anfitriao_nome'    => $obHosp->anfitriao_nome
     ];
 }
+
 	public static function editHospedagem($request,$id){
 		//POST VARS
 		$postVars = $request->getPostVars();

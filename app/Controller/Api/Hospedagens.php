@@ -87,28 +87,85 @@ class Hospedagens extends Api{
 		//POST VARS
 		$postVars = $request->getPostVars();
 		
-		//VALIDA OS CAMPOSS OBRIGATORIOS
-		if(!isset($postVars['membro_id']) 
-			or !isset($postVars['operador_id']) 
-			or !isset($postVars['tipo_local'])
+		// VALIDA OS CAMPOS OBRIGATORIOS
+if (
+    empty($postVars['membro_id']) || 
+    empty($postVars['operador_id']) || 
+    empty($postVars['tipo_local'])
+) {
+    throw new \Exception("Erro no cadastro: campos obrigatórios não preenchidos.", 400);
+}
+		// VERIFICA SE O TIPO DE HOSPEDAGEM FOI INFORMADO
+		if(empty($postVars['tipo_local'])){
+			throw new \Exception("Selecione o tipo de hospedagem",400);
+		}
+
+		//VERIFICA SE ONDE O MEMBRO VAI FICAR
+		if($postVars['tipo_local'] == 'Alojamento'){
+
+			if(empty($postVars['numero_cama'])){
+				throw new \Exception("Selecione o numero da cama",400);
+			} 
+
+		} else {
+			// SE VAI FICAR NA CASA DE ALGUME, OS DADOS DO ANFITRIÃO SÃO OBRIGATORIOS
+			if(empty($postVars['anfitriao_nome']) 
+			or empty($postVars['anfitriao_telefone']) 
+			or empty($postVars['anfitriao_endereco'])
 		){
-			throw new \Exception("As informações de Membro, operador, dias estadia e tipo de local são obrigatórios",400);
+			throw new \Exception("Informe os dados do anfitrião",400);
+		}
+
+		}
+
+		//VERIFICA SE ONDE O MEMBRO VAI FICAR
+		if($postVars['tipo_local'] == 'Alojamento'){
+			if(empty($postVars['numero_cama'])){
+				throw new \Exception("Selecione o numero da cama",400);
+			} 
+
+			// VEREFICA SE A DATA DE CHECK-IN FOI INFORMADA
+			if(empty($postVars['checkin_data'])){
+				throw new \Exception("Selecione a data de chegada",400);
+			}
+
+			// VEREFICA SE A DATA DE CHECK-IN FOI INFORMADA
+			if(empty($postVars['dias_estadia'])){
+				throw new \Exception("Informe os dias de estadias",400);
+			}
+
+		$obCamas = (array)Camas::getCamaByNumber((int)$postVars['numero_cama']);
+
+		if($obCamas['status_ocupacao']){
+			throw new \Exception("A cama selecionada está ocupada",400);
 		}
 
 		//NOVO DEPOIMENTO
 		$obHosp = new EntityHosp;
 		$obHosp->checkin_data = $postVars['checkin_data'];
-		$obHosp->checkout_data = $postVars['checkout_data'];
+		$obHosp->checkout_data = $postVars['checkout_data'] ?? null;
 		$obHosp->status = filter_var($postVars['status'] ?? '', FILTER_SANITIZE_SPECIAL_CHARS);
 		$obHosp->membro_id = filter_var($postVars['membro_id'] ?? '', FILTER_SANITIZE_NUMBER_INT);
 		$obHosp->operador_id = filter_var($postVars['operador_id'] ?? '', FILTER_SANITIZE_NUMBER_INT);
 		$obHosp->tipo_local = filter_var($postVars['tipo_local'] ?? '', FILTER_SANITIZE_SPECIAL_CHARS);
-		$obHosp->cama_id = filter_var($postVars['cama_id'] ?? '', FILTER_SANITIZE_NUMBER_INT);
+		$obHosp->cama_id = (int)$obCamas['id'];
 		$obHosp->dias_estadia = filter_var($postVars['dias_estadia'] ?? '', FILTER_SANITIZE_NUMBER_INT);
 		$obHosp->anfitriao_nome = filter_var($postVars['anfitriao_nome'] ?? '', FILTER_SANITIZE_SPECIAL_CHARS);
 		$obHosp->anfitriao_telefone = filter_var($postVars['anfitriao_telefone'] ?? '', FILTER_SANITIZE_SPECIAL_CHARS);
 		$obHosp->anfitriao_endereco = filter_var($postVars['anfitriao_endereco'] ?? '', FILTER_SANITIZE_SPECIAL_CHARS);
+
+		
 		$obHosp->cadastrar();
+
+		if(!$obHosp){
+			throw new \Exception("Erro ao registrar a hospedagem",400);
+		}
+
+		return $obStatus = self::statusHospedagem($obHosp->id);
+
+		if(!$obStatus){
+			throw new \Exception("Não foi possivel atualizar o status de ocupação da cama",400);
+		}
 
 		//RETORNA OS DETALHES DO DEPOIMENTO CADASTRADO
 
@@ -128,6 +185,7 @@ class Hospedagens extends Api{
 		];
 	}
 
+}
 	public static function editHospedagem($request,$id){
 		//POST VARS
 		$postVars = $request->getPostVars();
@@ -181,7 +239,7 @@ class Hospedagens extends Api{
 		];
 	}
 
-	public static function statusHospedagem($request,$id){
+	private static function statusHospedagem($id){
 
 		//BUSCA O REGISTRO
 		$obHosp = EntityHosp::getHospedagemById($id);
@@ -191,23 +249,19 @@ class Hospedagens extends Api{
 			throw new \Exception("O registro ".$id." não foi encontrado", 404);
 		}
 
-		$status = filter_var($postVars['status'] ?? '', FILTER_SANITIZE_SPECIAL_CHARS);
-		$status_ocupacao = new Camas();
+		$dadosCama = (array)Camas::getCamaById($obHosp->cama_id);
 
-		if($status == 'checkin' or $status == 'pendente'){
+		$status = $dadosCama['status_ocupacao'];
+		$obCama = new Camas();
+		$obCama->id =  $obHosp->cama_id;
 
-			$status_ocupacao->status = 1;
+		if(!$status){
+			$obCama->status_ocupacao = 1;
 		} else {
-			$status_ocupacao->status = 0;
+			$obCama->status_ocupacao = 0;
 		}
-		$status_ocupacao->atualizaStatusOcupado();
 
-		
-		//EXCLUI O REGISTRO
-		$obHosp->status = filter_var($postVars['status'] ?? '', FILTER_SANITIZE_SPECIAL_CHARS);
-		$obHosp->atualizaStatus();
-
-		//RETORNA OS DETALHES DA TRILHA ATUALIZADA
+		$obCama->atualizaStatusOcupado();
 
 		return [
 			'sucesso' => true

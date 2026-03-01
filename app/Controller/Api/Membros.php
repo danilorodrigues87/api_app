@@ -59,9 +59,10 @@ class Membros extends Api{
 
 
 	public static function buscaPorCodigoBarras($request,$codigo){
+
 		
-		if(!is_numeric($codigo)){
-			throw new \Exception("O id '".$codigo."' não é válido", 400);
+		if(empty($codigo)){
+			throw new \Exception("O codigo está vazio ou é invalido", 400);
 		}
 		$obMembro = EntityMembros::getMembroByCode($codigo);
 		

@@ -101,7 +101,7 @@ public static function cadNovaHospedagem($request) {
 
     
 $checkin_data = DateTimeHelper::dataEn($postVars['checkin_data']);
-
+$checkout_data = '';
 if(!empty($postVars['checkout_data'])){
 	$checkout_data = DateTimeHelper::dataEn($postVars['checkout_data']);
 }

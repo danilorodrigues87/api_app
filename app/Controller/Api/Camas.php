@@ -86,7 +86,7 @@ class Camas extends Api{
 
 		return [
 			'id' => (int)$obCama->id,
-			'setor' => $obCama->setor,
+			'setor_id' => $obCama->setor_id,
 			'numero_cama' => $obCama->numero_cama,
 			'status_ocupacao' => $obCama->status_ocupacao
 		];
@@ -105,7 +105,7 @@ class Camas extends Api{
 
 		return [
 			'id' => (int)$obCama->id,
-			'setor' => $obCama->setor,
+			'setor_id' => $obCama->setor_id,
 			'numero_cama' => $obCama->numero_cama,
 			'status_ocupacao' => $obCama->status_ocupacao
 		];
@@ -138,16 +138,16 @@ class Camas extends Api{
 		$obCama = new EntityCamas;
 // Atribui os valores ao objeto correto
 
-		$obCama->setor       = filter_var($postVars['setor'] ?? '', FILTER_SANITIZE_SPECIAL_CHARS);
-		$obCama->numero_cama            = filter_var($postVars['numero_cama'] ?? '', FILTER_SANITIZE_NUMBER_INT);
-		$obCama->status_ocupacao   = filter_var($postVars['status_ocupacao'] ?? '', FILTER_SANITIZE_NUMBER_INT);
+		$obCama->setor_id = filter_var($postVars['setor_id'] ?? '', FILTER_SANITIZE_NUMBER_INT);
+		$obCama->numero_cama = filter_var($postVars['numero_cama'] ?? '', FILTER_SANITIZE_NUMBER_INT);
+		$obCama->status_ocupacao = filter_var($postVars['status_ocupacao'] ?? '', FILTER_SANITIZE_NUMBER_INT);
 
 		$obCama->cadastrar();
 
 		//RETORNA OS DETALHES DO CADASTRADO
 		return [
 			'id' => (int)$obCama->id,
-			'setor' => $obCama->setor,
+			'setor_id' => $obCama->setor_id,
 			'numero_cama' => $obCama->numero_cama,
 			'status_ocupacao' => $obCama->status_ocupacao
 		];
@@ -159,7 +159,7 @@ class Camas extends Api{
 
 
 	    //VALIDA OS CAMPOSS OBRIGATORIOS
-		if(!isset($postVars['setor'])){
+		if(!isset($postVars['setor_id'])){
 			throw new \Exception("As informações setor, numero_cama e status_ocupacao são informações obrigatórias",400);
 		}
 		if(!isset($postVars['numero_cama'])){
@@ -178,7 +178,7 @@ class Camas extends Api{
 		}
 
 		//ATUALIZA O REGISTRO
-		$obCama->setor       = filter_var($postVars['setor'] ?? '', FILTER_SANITIZE_SPECIAL_CHARS);
+		$obCama->setor_id       = filter_var($postVars['setor_id'] ?? '', FILTER_SANITIZE_SPECIAL_CHARS);
 		$obCama->numero_cama            = filter_var($postVars['numero_cama'] ?? '', FILTER_SANITIZE_NUMBER_INT);
 		$obCama->status_ocupacao   = filter_var($postVars['status_ocupacao'] ?? '', FILTER_SANITIZE_NUMBER_INT);
 
@@ -187,7 +187,7 @@ class Camas extends Api{
 		//RETORNA OS DETALHES
 		return [
 			'id' => (int)$obCama->id,
-			'setor' => $obCama->setor,
+			'setor_id' => $obCama->setor_id,
 			'numero_cama' => $obCama->numero_cama,
 			'status_ocupacao' => $obCama->status_ocupacao
 		];

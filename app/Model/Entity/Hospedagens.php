@@ -29,7 +29,14 @@ class Hospedagens{
 
 	}
 
-	//RETORNA COM BASE NO ID
+	// RETORNA COM BASE NO ID DO MEMBRO
+	public static function getHospedagemByMemeberId($membro_id){
+
+		return (bool)self::getHospedagens('membro_id = ' . (int)$membro_id)->fetchObject(self::class);
+
+	}
+
+	//RETORNA COM BASE NO CAMA ID
 	public static function getHospedagemByCama($cama_id){
 
 		return self::getHospedagens('cama_id = '.$cama_id)->fetchObject(self::class);

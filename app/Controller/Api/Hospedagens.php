@@ -142,11 +142,14 @@ if(!empty($postVars['checkout_data'])){
         
         $camaId = (int)$camaArray['id'];
 
-    } else {
+    } elseif ($tipoLocal === 'Casa de um irmão') {
+    	
         // Validação para casa de anfitrião
-        if (empty($postVars['anfitriao_nome']) || empty($postVars['anfitriao_telefone'])) {
-            throw new \Exception("Informe os dados do anfitrião (Nome e Telefone).", 400);
-        }
+        if (empty($postVars['anfitriao_nome']) || 
+        	empty($postVars['anfitriao_telefone']) || 
+        	empty($postVars['anfitriao_telefone'])) {
+            throw new \Exception("Informe os dados do anfitrião (Nome e Telefone e endereço).", 400);
+
     }
 
     // 3. INSTÂNCIA E SANEAMENTO

@@ -88,7 +88,7 @@ public static function cadNovaHospedagem($request) {
     $postVars = $request->getPostVars();
 
     // 1. VALIDAÇÃO DE CAMPOS OBRIGATÓRIOS GERAIS
-    $requiredFields = ['membro_id', 'operador_id', 'tipo_local'];
+    $requiredFields = ['membro_id', 'operador_id', 'tipo_local', status];
     foreach ($requiredFields as $field) {
         if (empty($postVars[$field])) {
             throw new \Exception("Campo obrigatório não preenchido", 400);

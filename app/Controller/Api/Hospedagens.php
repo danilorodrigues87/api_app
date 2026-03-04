@@ -100,8 +100,8 @@ class Hospedagens extends Api{
 			'anfitriao_nome' => $obHosp->anfitriao_nome,
 			'anfitriao_telefone' => $obHosp->anfitriao_telefone,
 			'anfitriao_endereco' => $obHosp->anfitriao_endereco,
-			'checkin_data' => $obHosp->checkin_data,
-			'checkout_data' => $obHosp->checkout_data,
+			'checkin_data' => date('d/m/Y H:i', strtotime($obHosp->checkin_data)),
+			'checkout_data' => date('d/m/Y H:i', strtotime($obHosp->checkout_data)),
 			'status' => $obHosp->status
 		];
 

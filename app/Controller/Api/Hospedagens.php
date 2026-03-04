@@ -74,6 +74,13 @@ class Hospedagens extends Api{
 			throw new \Exception("O registro ".$id." não foi encontrado", 404);
 		}
 
+		$obCama = Camas::getCamaById($obHosp->cama_id);
+		
+		if(!$obCama instanceof Camas){
+			throw new \Exception("A cama de ID ".$id." não foi encontrada", 404);
+		}
+
+
 		$membro = [
 			'id' => (int)$obMembro->id,
 			'nome_completo' => $obMembro->nome_completo,
@@ -87,10 +94,8 @@ class Hospedagens extends Api{
 
 		$hospedagem = [
 			'id' => (int)$obHosp->id,
-			'membro_id' => (int)$obHosp->membro_id,
-			'operador_id' => (int)$obHosp->operador_id,
 			'tipo_local' => $obHosp->tipo_local,
-			'cama_id' => (int)$obHosp->cama_id,
+			'numero_cama' => $obCama->numero_cama,
 			'dias_estadia' => (int)$obHosp->dias_estadia,
 			'anfitriao_nome' => $obHosp->anfitriao_nome,
 			'anfitriao_telefone' => $obHosp->anfitriao_telefone,

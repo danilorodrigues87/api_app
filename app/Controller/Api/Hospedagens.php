@@ -2,6 +2,7 @@
 
 namespace App\Controller\Api;
 use \App\Model\Entity\Hospedagens as EntityHosp;
+use \App\Model\Entity\Membros as EntityMembros;
 use \App\Model\Entity\Camas;
 use \App\Model\Db\Pagination;
 use \App\Common\DateTimeHelper;
@@ -67,7 +68,24 @@ class Hospedagens extends Api{
 			throw new \Exception("O registro ".$id." não foi encontrado", 404);
 		}
 
-		return [
+		$obMembro = EntityMembros::getMembroById((int)$obHosp->membro_id);
+		
+		if(!$obMembro instanceof EntityMembros){
+			throw new \Exception("O registro ".$id." não foi encontrado", 404);
+		}
+
+		$membro = [
+			'id' => (int)$obMembro->id,
+			'nome_completo' => $obMembro->nome_completo,
+			'telefone' => $obMembro->telefone,
+			'cidade_residencia' => $obMembro->cidade_residencia,
+			'ministerio' => $obMembro->ministerio,
+			'admin_pertencente' => $obMembro->admin_pertencente,
+			'codigo_barras' => $obMembro->codigo_barras
+		];
+
+
+		$hospedagem = [
 			'id' => (int)$obHosp->id,
 			'membro_id' => (int)$obHosp->membro_id,
 			'operador_id' => (int)$obHosp->operador_id,
@@ -81,6 +99,15 @@ class Hospedagens extends Api{
 			'checkout_data' => $obHosp->checkout_data,
 			'status' => $obHosp->status
 		];
+
+		$dados = [
+
+			'hospedagem' => $hospedagem,
+			'membro' => $membro
+
+		];
+
+		return $dados;
 
 	}
 

@@ -71,39 +71,50 @@ class Hospedagens extends Api{
 		$obMembro = EntityMembros::getMembroById((int)$obHosp->membro_id);
 		
 		if(!$obMembro instanceof EntityMembros){
-			throw new \Exception("O registro ".$id." não foi encontrado", 404);
+			throw new \Exception("O Membro não foi encontrado", 404);
 		}
+
+		if($obHosp->tipo_local == "Alojamento"){
 
 		$obCama = Camas::getCamaById($obHosp->cama_id);
-		
 		if(!$obCama instanceof Camas){
-			throw new \Exception("A cama de ID ".$id." não foi encontrada", 404);
+			throw new \Exception("A cama de ID ".$obHosp->cama_id." não foi encontrada", 404);
 		}
 
+		} 
 
-		$membro = [
-			'id' => (int)$obMembro->id,
-			'nome_completo' => $obMembro->nome_completo,
-			'telefone' => $obMembro->telefone,
-			'cidade_residencia' => $obMembro->cidade_residencia,
-			'ministerio' => $obMembro->ministerio,
-			'admin_pertencente' => $obMembro->admin_pertencente,
-			'codigo_barras' => $obMembro->codigo_barras
-		];
+		
 
+// Helper simples para formatar datas com segurança
+$formatDate = function($date) {
+    return (!empty($date) && strtotime($date)) 
+        ? date('d/m/Y H:i', strtotime($date)) 
+        : 'N/D';
+};
 
-		$hospedagem = [
-			'id' => (int)$obHosp->id,
-			'tipo_local' => $obHosp->tipo_local,
-			'numero_cama' => $obCama->numero_cama,
-			'dias_estadia' => (int)$obHosp->dias_estadia,
-			'anfitriao_nome' => $obHosp->anfitriao_nome,
-			'anfitriao_telefone' => $obHosp->anfitriao_telefone,
-			'anfitriao_endereco' => $obHosp->anfitriao_endereco,
-			'checkin_data' => date('d/m/Y H:i', strtotime($obHosp->checkin_data)),
-			'checkout_data' => date('d/m/Y H:i', strtotime($obHosp->checkout_data)),
-			'status' => $obHosp->status
-		];
+$membro = [
+    'id'                => (int)($obMembro->id ?? 0),
+    'nome_completo'     => trim($obMembro->nome_completo ?? ''),
+    'telefone'          => $obMembro->telefone ?? '',
+    'cidade_residencia' => $obMembro->cidade_residencia ?? '',
+    'ministerio'        => $obMembro->ministerio ?? '',
+    'admin_pertencente' => $obMembro->admin_pertencente ?? '',
+    'codigo_barras'     => $obMembro->codigo_barras ?? ''
+];
+
+$hospedagem = [
+    'id'                 => (int)($obHosp->id ?? 0),
+    'tipo_local'         => $obHosp->tipo_local ?? 'Não definido',
+    'numero_cama'        => $obCama->numero_cama ?? 'S/N', // Proteção caso $obCama seja nulo
+    'dias_estadia'       => (int)($obHosp->dias_estadia ?? 0),
+    'anfitriao_nome'     => trim($obHosp->anfitriao_nome ?? ''),
+    'anfitriao_telefone' => $obHosp->anfitriao_telefone ?? '',
+    'anfitriao_endereco' => $obHosp->anfitriao_endereco ?? '',
+    'obs_medicas'        => $obHosp->obs_medicas ?? 'Nenhuma',
+    'checkin_data'       => $formatDate($obHosp->checkin_data ?? null),
+    'checkout_data'      => $formatDate($obHosp->checkout_data ?? null),
+    'status'             => (int)($obHosp->status ?? 0)
+];
 
 		$dados = [
 

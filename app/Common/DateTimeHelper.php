@@ -58,11 +58,27 @@ class DateTimeHelper {
 
     // Transforma data do formato brasileiro (d/m/Y) para o inglês (Y-m-d)
     public static function dataEn($data) {
-        if (is_string($data)) {
-            $data = \DateTime::createFromFormat('d/m/Y', $data);
+    // Se estiver vazio ou não for string/objeto, retorna null imediatamente
+    if (empty($data)) return null;
+
+    if (is_string($data)) {
+        $obj = \DateTime::createFromFormat('d/m/Y', $data);
+        
+        // Verifica se a data é válida conforme o formato d/m/Y
+        // O método getLastErrors() ajuda a evitar datas como 31/02/2024
+        if (!$obj || $obj->format('d/m/Y') !== $data) {
+            return null; // Ou lance uma Exception se preferir
         }
+        return $obj->format('Y-m-d');
+    }
+    
+    // Se já for um objeto DateTime
+    if ($data instanceof \DateTime) {
         return $data->format('Y-m-d');
     }
+
+    return null;
+}
 
     // Extrai o dia de uma data
     public static function extraiDia($data, $opcao = 1) {

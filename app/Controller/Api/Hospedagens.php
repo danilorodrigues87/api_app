@@ -12,13 +12,11 @@ class Hospedagens extends Api{
 	private static function getHospedagemItens($request,&$obPagination){
 
 		// 1. DEFINIÇÃO DOS CAMPOS (Adicionado membros.nome)
-    $fields = 'hospedagens.*, camas.numero_cama, membros.nome_completo as nome_membro,membros.cidade_residencia as cidade';
+    $fields = 'hospedagens.*, membros.nome_completo as nome_membro,membros.cidade_residencia as cidade';
     
-    // 2. DEFINIÇÃO DOS JOINS (Adicionado Join de membros)
-    $innerJoin = ' INNER JOIN camas ON hospedagens.cama_id = camas.id';
-    $innerJoin .= ' INNER JOIN membros ON hospedagens.membro_id = membros.id';
+    $innerJoin = ' INNER JOIN membros ON hospedagens.membro_id = membros.id';
     
-    $where = "status = 'checkin' OR status = 'pendende' ";
+    $where = "status = 'checkin' OR status = 'pendente' ";
 
     // QUANTIDADE TOTAL DE REGISTROS
     $quantidadeTotal = EntityHosp::getHospedagens($where, null, null, 'COUNT(*) as qtd', $innerJoin)->fetchObject()->qtd;
@@ -33,13 +31,22 @@ class Hospedagens extends Api{
     // RESULTADOS DA PAGINA
     $results = EntityHosp::getHospedagens($where, 'hospedagens.id DESC', $obPagination->getLimit(), $fields, $innerJoin);
 
+
     $itens = [];
     // RENDERIZA O ITEM
     while ($obHosp = $results->fetchObject(EntityHosp::class)) {
+
+    	$obCama = Camas::getCamaById($obHosp->cama_id);
+		if(!$obCama instanceof Camas){
+			$numero_cama = 'S/N';
+		} else {
+			$numero_cama = $obCama->numero_cama;
+		}
+
         $itens[] = [
             'id'              => (int)$obHosp->id,
             'nome_membro'     => $obHosp->nome_membro, // Novo campo adicionado
-            'numero_cama'     => $obHosp->numero_cama, 
+            'numero_cama'     => $numero_cama, 
             'cidade'          => $obHosp->cidade, 
             'checkin_data'    => date('d/m/Y H:i', strtotime($obHosp->checkin_data)),
             'status'          => $obHosp->status
@@ -103,17 +110,20 @@ $membro = [
 ];
 
 $hospedagem = [
-    'id'                 => (int)($obHosp->id ?? 0),
-    'tipo_local'         => $obHosp->tipo_local ?? 'Não definido',
-    'numero_cama'        => $obCama->numero_cama ?? 'S/N', // Proteção caso $obCama seja nulo
-    'dias_estadia'       => (int)($obHosp->dias_estadia ?? 0),
-    'anfitriao_nome'     => trim($obHosp->anfitriao_nome ?? ''),
-    'anfitriao_telefone' => $obHosp->anfitriao_telefone ?? '',
-    'anfitriao_endereco' => $obHosp->anfitriao_endereco ?? '',
-    'obs_medicas'        => $obHosp->obs_medicas ?? 'Nenhuma',
-    'checkin_data'       => $formatDate($obHosp->checkin_data ?? null),
-    'checkout_data'      => $formatDate($obHosp->checkout_data ?? null),
-    'status'             => $obHosp->status ?? ''
+    'id'                => (int)($obHosp->id ?? 0),
+    'tipo_local'        => $obHosp->tipo_local ?? 'Não definido',
+    'numero_cama'       => $obCama->numero_cama ?? 'S/N', 
+    'dias_estadia'      => (int)($obHosp->dias_estadia ?? 0),
+    'anfitriao_nome'    => trim($obHosp->anfitriao_nome ?? 'Não informado'),
+    'anfitriao_telefone'=> $obHosp->anfitriao_telefone ?? 'N/A',
+    'anfitriao_endereco'=> $obHosp->anfitriao_endereco ?? 'N/A',
+    'obs_medicas'       => $obHosp->obs_medicas ?? 'Nenhuma',
+    
+    // Melhor tratar a data antes ou garantir que a função aceite null
+    'checkin_data'      => isset($obHosp->checkin_data) ? $formatDate($obHosp->checkin_data) : 'Data não definida',
+    'checkout_data'     => isset($obHosp->checkout_data) ? $formatDate($obHosp->checkout_data) : 'Data não definida',
+    
+    'status'            => $obHosp->status ?? 'pendente'
 ];
 
 		$dados = [

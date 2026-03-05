@@ -208,6 +208,7 @@ public static function cadNovaHospedagem($request) {
     $obHosp->tipo_local        = filter_var($tipoLocal, FILTER_SANITIZE_SPECIAL_CHARS);
     $obHosp->checkin_data      = $checkin_data;
     $obHosp->checkout_data     = $checkout_data ?: null;
+    $obHosp->obs_medicas       = filter_var($postVars['obs_medicas'] ?? '', FILTER_SANITIZE_SPECIAL_CHARS);
     $obHosp->dias_estadia      = filter_var($postVars['dias_estadia'], FILTER_SANITIZE_NUMBER_INT);
     $obHosp->cama_id           = $camaId;
     $obHosp->status            = filter_var($postVars['status'] ?? 'Pendente', FILTER_SANITIZE_SPECIAL_CHARS);
@@ -236,40 +237,89 @@ public static function cadNovaHospedagem($request) {
 }
 
 	public static function editHospedagem($request,$id){
+
+		if(empty($id)){
+        throw new \Exception("Erro ao identificar o registro, se isso percistir contate o suporte", 400);
+    }
+
 		//POST VARS
-		$postVars = $request->getPostVars();
-		
-		//VALIDA OS CAMPOSS OBRIGATORIOS
-		if(!isset($postVars['membro_id']) 
-			or !isset($postVars['operador_id']) 
-			or !isset($postVars['tipo_local'])
-		){
-			throw new \Exception("As informações de Membro, operador, dias estadia  e tipo de local são obrigatórios",400);
-		}
+	$postVars = $request->getPostVars();
+		 // 1. VALIDAÇÃO DE CAMPOS OBRIGATÓRIOS GERAIS
+    $requiredFields = ['membro_id', 'operador_id', 'tipo_local', status];
+    foreach ($requiredFields as $field) {
+        if (empty($postVars[$field])) {
+            throw new \Exception("Campo obrigatório não preenchido", 400);
+        }
+    }
 
+    if(empty($postVars['checkin_data'])){
+        throw new \Exception("Data de chegada não foi informada", 400);
+    }
 
-		//BUSCA O REGISTRO
-		$obHosp = EntityHosp::getHospedagemById($id);
+    $checkin_data = DateTimeHelper::dataEn($postVars['checkin_data']);
+    $checkout_data = '';
+    if(!empty($postVars['checkout_data'])){
+        $checkout_data = DateTimeHelper::dataEn($postVars['checkout_data']);
+    }
 
-		//VALIDA A INSTANCIA
-		if(!$obHosp instanceof EntityHosp){
-			throw new \Exception("O registro ".$id." não foi encontrada", 404);
-		}
+    if(empty($postVars['dias_estadia'])){
+        throw new \Exception("Dias de estadia não foi informado", 400);
+    }
 
-		//ATUALIZA O REGISTRO
-		$obHosp = new EntityHosp;
-		$obHosp->checkin_data = $postVars['checkin_data'];
-		$obHosp->checkout_data = $postVars['checkout_data'];
-		$obHosp->status = filter_var($postVars['status'] ?? '', FILTER_SANITIZE_SPECIAL_CHARS);
-		$obHosp->membro_id = filter_var($postVars['membro_id'] ?? '', FILTER_SANITIZE_NUMBER_INT);
-		$obHosp->operador_id = filter_var($postVars['operador_id'] ?? '', FILTER_SANITIZE_NUMBER_INT);
-		$obHosp->tipo_local = filter_var($postVars['tipo_local'] ?? '', FILTER_SANITIZE_SPECIAL_CHARS);
-		$obHosp->cama_id = filter_var($postVars['cama_id'] ?? '', FILTER_SANITIZE_NUMBER_INT);
-		$obHosp->dias_estadia = filter_var($postVars['dias_estadia'] ?? '', FILTER_SANITIZE_NUMBER_INT);
-		$obHosp->anfitriao_nome = filter_var($postVars['anfitriao_nome'] ?? '', FILTER_SANITIZE_SPECIAL_CHARS);
-		$obHosp->anfitriao_telefone = filter_var($postVars['anfitriao_telefone'] ?? '', FILTER_SANITIZE_SPECIAL_CHARS);
-		$obHosp->anfitriao_endereco = filter_var($postVars['anfitriao_endereco'] ?? '', FILTER_SANITIZE_SPECIAL_CHARS);
-		$obTrilhas->atualizar();
+    if(empty($postVars['tipo_local'])){
+        throw new \Exception("Selecione o tipo de hospedagem", 400);
+    }
+
+    if(EntityHosp::getHospedagemByMemeberId($postVars['membro_id'])){
+        throw new \Exception("O membro já tem uma hospedagem ativa", 400);
+    }
+
+    $tipoLocal = $postVars['tipo_local'];
+    $camaId = null;
+
+    // 2. LÓGICA ESPECÍFICA POR TIPO DE LOCAL
+    if ($tipoLocal === 'Alojamento') {
+        if (empty($postVars['numero_cama'])) {
+            throw new \Exception("Selecione o número da cama para alojamento.", 400);
+        }
+
+        $obCama = Camas::getCamaByNumber((int)$postVars['numero_cama']);
+        $camaArray = (array)$obCama;
+
+        if (empty($camaArray)) {
+            throw new \Exception("Cama não encontrada.", 404);
+        }
+
+        if ($camaArray['status_ocupacao']) {
+            throw new \Exception("A cama selecionada já está ocupada.", 400);
+        }
+        
+        $camaId = (int)$camaArray['id'];
+
+    } elseif ($tipoLocal === 'Casa de um irmão') {
+        // Validação para casa de anfitrião
+        if (empty($postVars['anfitriao_nome']) || 
+            empty($postVars['anfitriao_telefone']) || 
+            empty($postVars['anfitriao_endereco'])) {
+            throw new \Exception("Informe os dados do anfitrião (Nome e Telefone e endereço).", 400);
+        } // <-- Faltava fechar este IF de validação
+    } // <-- Faltava fechar este ELSEIF
+
+    // 3. INSTÂNCIA E SANEAMENTO
+    $obHosp = new EntityHosp;
+    $obHosp->membro_id         = filter_var($postVars['membro_id'], FILTER_SANITIZE_NUMBER_INT);
+    $obHosp->operador_id       = filter_var($postVars['operador_id'], FILTER_SANITIZE_NUMBER_INT);
+    $obHosp->tipo_local        = filter_var($tipoLocal, FILTER_SANITIZE_SPECIAL_CHARS);
+    $obHosp->obs_medicas       = filter_var($postVars['obs_medicas'] ?? '', FILTER_SANITIZE_SPECIAL_CHARS);
+    $obHosp->checkin_data      = $checkin_data;
+    $obHosp->checkout_data     = $checkout_data ?: null;
+    $obHosp->dias_estadia      = filter_var($postVars['dias_estadia'], FILTER_SANITIZE_NUMBER_INT);
+    $obHosp->cama_id           = $camaId;
+    $obHosp->status            = filter_var($postVars['status'] ?? 'Pendente', FILTER_SANITIZE_SPECIAL_CHARS);
+    $obHosp->anfitriao_nome    = filter_var($postVars['anfitriao_nome'] ?? '', FILTER_SANITIZE_SPECIAL_CHARS);
+    $obHosp->anfitriao_telefone = filter_var($postVars['anfitriao_telefone'] ?? '', FILTER_SANITIZE_SPECIAL_CHARS);
+    $obHosp->anfitriao_endereco = filter_var($postVars['anfitriao_endereco'] ?? '', FILTER_SANITIZE_SPECIAL_CHARS);
+	$obTrilhas->atualizar();
 
 		//RETORNA OS DETALHES
 		return [
@@ -279,6 +329,7 @@ public static function cadNovaHospedagem($request) {
 			'tipo_local' => $obHosp->tipo_local,
 			'cama_id' => (int)$obHosp->cama_id,
 			'dias_estadia' => (int)$obHosp->dias_estadia,
+			'obs_medicas' => (int)$obHosp->obs_medicas,
 			'anfitriao_nome' => $obHosp->anfitriao_nome,
 			'anfitriao_telefone' => $obHosp->anfitriao_telefone,
 			'anfitriao_endereco' => $obHosp->anfitriao_endereco,

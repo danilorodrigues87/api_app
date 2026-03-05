@@ -113,7 +113,7 @@ $hospedagem = [
     'obs_medicas'        => $obHosp->obs_medicas ?? 'Nenhuma',
     'checkin_data'       => $formatDate($obHosp->checkin_data ?? null),
     'checkout_data'      => $formatDate($obHosp->checkout_data ?? null),
-    'status'             => (int)($obHosp->status ?? 0)
+    'status'             => $obHosp->status ?? ''
 ];
 
 		$dados = [

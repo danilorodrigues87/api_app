@@ -240,11 +240,11 @@ public static function cadNovaHospedagem($request) {
 }
 
 public static function setEditHospedagem($request, $id) {
+
     // 1. VALIDAÇÃO DO ID
 	if (empty($id)) {
 		throw new \Exception("Erro ao identificar o registro. Se isso persistir, contate o suporte.", 400);
 	}
-
 
     // Busca a hospedagem existente no banco
     $obHosp = EntityHosp::getHospedagemById($id); // Certifique-se que esse método existe
@@ -305,6 +305,15 @@ public static function setEditHospedagem($request, $id) {
     	if (empty($postVars['anfitriao_nome']) || empty($postVars['anfitriao_telefone']) || empty($postVars['anfitriao_endereco'])) {
     		throw new \Exception("Informe os dados completos do anfitrião (Nome, Telefone e Endereço).", 400);
     	}
+
+    	if(!empty($postVars['cama_atual'])){
+    		$res = self::statusHospedagem((int)$obHosp->id);
+    		if(!$res){
+    			throw new \Exception("Erro na atualização no numero da cama.", 400);
+    		}
+    	}
+
+
     }
 
     // 6. ATUALIZAÇÃO DO OBJETO (Saneamento)

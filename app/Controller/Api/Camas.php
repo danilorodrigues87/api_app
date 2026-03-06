@@ -16,8 +16,6 @@ class Camas extends Api{
 		//RESULTADOS DA PAGINA
 		$results = EntityCamas::getCamas(null,'id ASC');
 
-		
-
 		//REDERIZA O ITEM
 		while ($obCama = $results->fetchObject(EntityCamas::class)) {
 			$hospede= 'Disponivel';

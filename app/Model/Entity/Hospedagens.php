@@ -110,13 +110,25 @@ class Hospedagens{
 
 	}
 
-	//EXCLUI DO BANCO DE DADOS
+
 	public function atualizaStatus(){
 
 		return (new Database('hospedagens'))->update('id = '.$this->id,[
 			'status' => $this->status
 		]);
 	}
+
+
+
+	public function checkOutHospedagem(){
+
+		return (new Database('hospedagens'))->update('id = '.$this->id,[
+			'status' => $this->status,
+			'checkout_data' => $this->checkout_data
+
+		]);
+	}
+
 
 
 

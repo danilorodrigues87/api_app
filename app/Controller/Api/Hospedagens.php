@@ -352,6 +352,51 @@ public static function setEditHospedagem($request, $id) {
     ];
 }
 
+
+public static function checkOut($request,$id){
+
+	// 1. VALIDAÇÃO DO ID
+	if (empty($id)) {
+		throw new \Exception("Erro ao identificar o registro. Se isso persistir, contate o suporte.", 400);
+	}
+
+    // Busca a hospedagem existente no banco
+    $obHosp = EntityHosp::getHospedagemById($id); // Certifique-se que esse método existe
+    if (!$obHosp instanceof EntityHosp) {
+    	throw new \Exception("Hospedagem não encontrada.", 404);
+    }
+    if($obHosp->status == 'checkout'){
+    	throw new \Exception("Esse membro já fez check-out.", 404);
+
+    }
+
+    $postVars = $request->getPostVars();
+
+     $checkout_timestamp = !empty($postVars['checkout_data']) ? strtotime(str_replace('/', '-', $postVars['checkout_data'])) : false;
+    $checkout_data = $checkout_timestamp ? date('Y-m-d H:i:s', $checkout_timestamp) : null;
+
+     if (empty($checkout_data)) {
+    	throw new \Exception("Erro no registro do Check-Out.", 404);
+    }
+
+    $obHosp->checkout_data = $checkout_data;
+    $obHosp->status = 'checkout';
+
+    $obHosp->checkOutHospedagem();
+
+    $res = self::statusHospedagem((int)$obHosp->id);
+    if(!$res){
+    	throw new \Exception("Erro na atualização no numero da cama.", 400);
+    }
+
+    return true;
+
+
+}
+
+
+
+
 private static function statusHospedagem($id){
 
 		//BUSCA O REGISTRO
@@ -363,7 +408,7 @@ private static function statusHospedagem($id){
 	}
 
 	$dadosCama = (array)Camas::getCamaById($obHosp->cama_id);
-
+ 
 	$status = $dadosCama['status_ocupacao'];
 	$obCama = new Camas();
 	$obCama->id =  $obHosp->cama_id;

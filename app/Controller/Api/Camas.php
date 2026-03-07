@@ -13,8 +13,17 @@ class Camas extends Api{
 	private static function getCamasItens($request,&$obPagination){
 		$itens = [];
 
+		$queryParams = $request->getQueryParams();
+
+		if($queryParams['statusAtivacao']){
+			$where = 'ativo = 1';
+		} else {
+			$where = '';
+		}
+
+
 		//RESULTADOS DA PAGINA
-		$results = EntityCamas::getCamas(null,'id ASC');
+		$results = EntityCamas::getCamas($where,'id ASC');
 
 		//REDERIZA O ITEM
 		while ($obCama = $results->fetchObject(EntityCamas::class)) {
@@ -32,7 +41,8 @@ class Camas extends Api{
 				'setor_id' => $obCama->setor_id,
 				'numero_cama' => $obCama->numero_cama,
 				'nome_hospede' => $hospede,
-				'status_ocupacao' => $obCama->status_ocupacao
+				'status_ocupacao' => $obCama->status_ocupacao,
+				'ativo' => $obCama->ativo
 
 			];
 		}
@@ -86,7 +96,8 @@ class Camas extends Api{
 			'id' => (int)$obCama->id,
 			'setor_id' => $obCama->setor_id,
 			'numero_cama' => $obCama->numero_cama,
-			'status_ocupacao' => $obCama->status_ocupacao
+			'status_ocupacao' => $obCama->status_ocupacao,
+			'ativo' => $obCama->ativo
 		];
 
 	}
@@ -105,7 +116,8 @@ class Camas extends Api{
 			'id' => (int)$obCama->id,
 			'setor_id' => $obCama->setor_id,
 			'numero_cama' => $obCama->numero_cama,
-			'status_ocupacao' => $obCama->status_ocupacao
+			'status_ocupacao' => $obCama->status_ocupacao,
+			'ativo' => $obCama->ativo
 		];
 
 	}
@@ -147,7 +159,8 @@ class Camas extends Api{
 			'id' => (int)$obCama->id,
 			'setor_id' => $obCama->setor_id,
 			'numero_cama' => $obCama->numero_cama,
-			'status_ocupacao' => $obCama->status_ocupacao
+			'status_ocupacao' => $obCama->status_ocupacao,
+			'ativo' => $obCama->ativo
 		];
 	}
 
@@ -191,8 +204,7 @@ class Camas extends Api{
 		];
 	}
 
-	public static function deleteCama($request,$id){
-
+	public static function statusAtivacao($request,$id){
 		//BUSCA O REGISTRO
 		$obCama = EntityCamas::getCamaById($id);
 
@@ -201,8 +213,23 @@ class Camas extends Api{
 			throw new \Exception("O registro ".$id." não foi encontrado", 404);
 		}
 
+
+		if($obCama->status_ocupacao == 1){
+			throw new \Exception("Essa cama não pode ser desativada, pois existe uma hospedagem ativa.", 404);
+		}
+
+	if(!$obCama->ativo){
+
+		$obCama->ativo = 1;
+
+	} else {
+
+		$obCama->ativo = 0;
+
+	}
+
 		//EXCLUI O REGISTRO
-		$obCama->excluir();
+		$obCama->AtivaDesativar();
 
 		//RETORNA OS DETALHES DA ATUALIZAÇÃO ATUALIZADA
 

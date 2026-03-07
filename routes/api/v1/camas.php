@@ -55,11 +55,11 @@ $obRouter->put('/api/v1/edit-cama/{id}',[
 ]);
 
 //ROTA DE EXCLUSÃO DE DEPOIMENTOS VIA API
-$obRouter->delete('/api/v1/delete-cama/{id}',[
+$obRouter->put('/api/v1/cama-status-ativo/{id}',[
 	'middlewares' => [
 		'api'
 	],
 	function($request,$id){
-		return new Response(200,Api\Camas::deleteCama($request,$id),'application/json');
+		return new Response(200,Api\Camas::statusAtivacao($request,$id),'application/json');
 	}
 ]);

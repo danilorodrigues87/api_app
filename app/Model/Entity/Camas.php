@@ -10,7 +10,8 @@ class Camas{
 	$setor_id,
 	$nome_setor,
 	$numero_cama,
-	$status_ocupacao;
+	$status_ocupacao,
+	$ativo;
 
 	//RETORNA COM BASE NO ID
 	public static function getCamaById($id){
@@ -35,7 +36,8 @@ class Camas{
 
 			'setor_id' => $this->setor_id,
 			'numero_cama' => $this->numero_cama,
-			'status_ocupacao' => $this->status_ocupacao
+			'status_ocupacao' => $this->status_ocupacao,
+			'ativo' => $this->ativo
 
 		]);
 		
@@ -70,7 +72,8 @@ class Camas{
 		return (new Database('camas'))->update('id = '.$this->id,[
 			'setor_id' => $this->setor_id,
 			'numero_cama' => $this->numero_cama,
-			'status_ocupacao' => $this->status_ocupacao
+			'status_ocupacao' => $this->status_ocupacao,
+			'ativo' => $this->ativo
 		]);
 
 	}
@@ -85,11 +88,16 @@ class Camas{
 
 	}
 
-	//EXCLUI DO BANCO DE DADOS
-	public function excluir(){
+	//ATUALIZA NO BANCO
+	public function AtivaDesativar(){
 
-		return (new Database('camas'))->delete('id = '.$this->id);
+		//ATUALIZA OS DADOS PARA O BANCO DE DADOS
+		return (new Database('camas'))->update('id = '.$this->id,[
+			'ativo' => $this->ativo
+		]);
 
 	}
+
+
 
 }

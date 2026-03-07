@@ -23,6 +23,21 @@ $obRouter->post('/api/v1/cadastro-hospedagem',[
 	}
 ]);
 
+
+//ROTA DADOS DO DASHBOARD
+$obRouter->get('/api/v1/dashboard',[
+	'middlewares' => [
+		'api',
+	],
+	function($request){
+		return new Response(200,Api\Dashboard::dashboardData($request),'application/json');
+	}
+]);
+
+
+
+// -=-=-=-= ROTAS COM IDS
+
 //ROTA RECEBIMENTO VIA API COM BASE NO ID
 $obRouter->get('/api/v1/hospedagem/{id}',[
 	'middlewares' => [
@@ -56,12 +71,12 @@ $obRouter->delete('/api/v1/delete-hospedagem/{id}',[
 ]);
 
 
-//ROTA DADOS DO DASHBOARD
-$obRouter->get('/api/v1/dashboard',[
+//ROTA DE CHECKOUT
+$obRouter->put('/api/v1/hospedagem-checkout/{id}',[
 	'middlewares' => [
 		'api',
 	],
-	function($request){
-		return new Response(200,Api\Dashboard::dashboardData($request),'application/json');
+	function($request,$id){
+		return new Response(200,Api\Hospedagens::checkOut($request,$id),'application/json');
 	}
 ]);

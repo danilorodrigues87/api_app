@@ -221,10 +221,12 @@ class Camas extends Api{
 	if(!$obCama->ativo){
 
 		$obCama->ativo = 1;
+		$res = 'Ativado';
 
 	} else {
 
 		$obCama->ativo = 0;
+		$res = 'Desativado';
 
 	}
 
@@ -234,7 +236,7 @@ class Camas extends Api{
 		//RETORNA OS DETALHES DA ATUALIZAÇÃO ATUALIZADA
 
 		return [
-			'sucesso' => true
+			'sucesso' => $res
 		];
 	}
 

@@ -8,14 +8,14 @@ class AppAuth{
 
 		// 1. Obtém os headers
 		$headers = $request->getHeaders();
-
+    
 		// 2. Verifica se a chave existe e não está vazia
-		if (empty($headers['X-App-Source-Secret-Key'])) {
+		if (empty($headers['x-app-source-secret-key'])) {
 			return false;
 		}
 
-		// 3. Extrai o valor (ajuste se o framework retornar array, ex: $headers['X-App-Source-Secret-Key'][0])
-		$headerSecretKey = $headers['X-App-Source-Secret-Key'];
+		// 3. Extrai o valor (ajuste se o framework retornar array, ex: $headers['x-app-source-secret-key'][0])
+		$headerSecretKey = $headers['x-app-source-secret-key'];
 
 		// 4. Comparação segura
 		// Se não forem iguais, lança a exceção

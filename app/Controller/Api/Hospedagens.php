@@ -413,7 +413,7 @@ private static function statusHospedagem($id){
 	$obCama = new Camas();
 	$obCama->id =  $obHosp->cama_id;
 
-	if(!$status){
+	if(!$status){ 
 		$obCama->status_ocupacao = 1;
 	} else {
 		$obCama->status_ocupacao = 0;

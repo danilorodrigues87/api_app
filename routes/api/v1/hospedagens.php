@@ -5,8 +5,7 @@ use \App\Controller\Api;
 //ROTA RECEBIMENTO VIA API
 $obRouter->get('/api/v1/hospedagens',[
 	'middlewares' => [
-		'api',
-		'cache'
+		'api'
 	],
 	function($request){
 		return new Response(200,Api\Hospedagens::getHospedagens($request),'application/json');
@@ -27,7 +26,7 @@ $obRouter->post('/api/v1/cadastro-hospedagem',[
 //ROTA DADOS DO DASHBOARD
 $obRouter->get('/api/v1/dashboard',[
 	'middlewares' => [
-		'api',
+		'api'
 	],
 	function($request){
 		return new Response(200,Api\Dashboard::dashboardData($request),'application/json');

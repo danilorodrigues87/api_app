@@ -31,10 +31,19 @@ class Environment {
 	}
 
 	/**
-	 * Obtém uma variável de ambiente com fallback
+	 * Obtém uma variável de ambiente com fallback (arquivo .env, Easypanel e PHP-FPM)
 	 */
 	public static function get($key, $default = null) {
 		$value = getenv($key);
-		return $value !== false ? $value : $default;
+		if ($value === false && isset($_ENV[$key])) {
+			$value = $_ENV[$key];
+		}
+		if ($value === false && isset($_SERVER[$key])) {
+			$value = $_SERVER[$key];
+		}
+		if ($value === false || $value === '') {
+			return $default;
+		}
+		return $value;
 	}
 }

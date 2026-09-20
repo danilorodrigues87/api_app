@@ -31,11 +31,9 @@ class Router{
 
 	//define o prefixo das rotas
 	private function setPrefix(){
-		//Informações da URL atual
-		$parseUrl = parse_url($this->url);
-		
-		//Define o prefixo
-		$this->prefix = $parseUrl['path'] ?? '';
+		$parseUrl = parse_url((string) $this->url);
+		$path = is_array($parseUrl) ? ($parseUrl['path'] ?? '') : '';
+		$this->prefix = rtrim($path, '/');
 	}
 
 	//Adiciona uma rota na classe

@@ -5,12 +5,10 @@ use \App\Common\Environment;
 use \PDO;
 use \PDOException;
 
-Environment::load(__DIR__);
-
-define('DB_HOST', getenv('DB_HOST'));
-define('DB_NAME', getenv('DB_NAME'));
-define('DB_USER', getenv('DB_USER'));
-define('DB_PASS', getenv('DB_PASS'));
+if (!defined('DB_HOST')) define('DB_HOST', Environment::get('DB_HOST', ''));
+if (!defined('DB_NAME')) define('DB_NAME', Environment::get('DB_NAME', ''));
+if (!defined('DB_USER')) define('DB_USER', Environment::get('DB_USER', ''));
+if (!defined('DB_PASS')) define('DB_PASS', Environment::get('DB_PASS', ''));
 
 class Database{
 
@@ -37,8 +35,7 @@ class Database{
         $this->connection->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
         $this->connection->setAttribute(PDO::ATTR_DEFAULT_FETCH_MODE, PDO::FETCH_ASSOC); // Configuração opcional para o modo de busca padrão
     }catch(PDOException $e){
-        //SUBSTITUIR POR MENSAGEM AMIGÁVEL
-        die('ERROR: '.$e->getMessage());
+        throw new \Exception('Falha ao conectar no banco de dados: '.$e->getMessage(), 500);
     }
 }
 

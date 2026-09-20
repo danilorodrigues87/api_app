@@ -16,11 +16,32 @@ class Request {
     public function __construct($router){
         $this->router = $router;
         $this->queryParams = $_GET ?? [];
-        $this->headers = getallheaders();
+        $this->setHeaders();
         $this->httpMethod = $_SERVER['REQUEST_METHOD'] ?? '';
         $this->setUri();
         $this->setPostVars();
         $this->setFileVars();
+    }
+
+    private function setHeaders(){
+        $headers = [];
+        if (function_exists('getallheaders')) {
+            $headers = getallheaders() ?: [];
+        }
+        if (empty($headers)) {
+            foreach ($_SERVER as $key => $value) {
+                if (strpos($key, 'HTTP_') !== 0) {
+                    continue;
+                }
+                $name = str_replace(' ', '-', strtolower(str_replace('_', ' ', substr($key, 5))));
+                $headers[$name] = $value;
+            }
+        }
+        $normalized = [];
+        foreach ($headers as $key => $value) {
+            $normalized[strtolower($key)] = $value;
+        }
+        $this->headers = $normalized;
     }
 
     // DEFINE AS VARIÁVEIS DO POST

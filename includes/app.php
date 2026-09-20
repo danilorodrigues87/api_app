@@ -10,10 +10,10 @@ use \App\Http\Middleware\Queue as MiddlewareQueue;
 Environment::load(__DIR__.'/../');
 
 //DEFINE A CONSTANTE DE URL
-define('URL', getenv('URL'));
-define('SITE', getenv('SITE'));
-define('APP_KEY', getenv('APP_KEY'));
-define('TIMEZONE', getenv('TIMEZONE'));
+define('URL', rtrim((string) Environment::get('URL', ''), '/'));
+define('SITE', Environment::get('SITE', ''));
+define('APP_KEY', Environment::get('APP_KEY', ''));
+define('TIMEZONE', Environment::get('TIMEZONE', 'America/Sao_Paulo'));
 date_default_timezone_set(TIMEZONE);
 header('Content-Type: text/html; charset=utf-8');
 
